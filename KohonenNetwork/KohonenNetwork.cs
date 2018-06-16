@@ -11,16 +11,12 @@ using NeuralNetworkConstructor.Network.Node.Synapse;
 
 namespace KohonenNetwork
 {
-    public class KohonenNetwork<TFunc> : Network
+    public class KohonenNetwork<TFunc> : TwoLayersNetwork
         where TFunc : IActivationFunction, new()
     {
 
-        private ILayer<IInputNode> _inputLayer = new InputLayer();
-        private ILayer<INode> _outputLayer = new Layer();
-
-        public override ICollection<ILayer<INode>> Layers => new ILayer<INode>[] { _outputLayer };
-
-        public override ILayer<INode> OutputLayer => _outputLayer;
+        private ISelfLearning _learning;
+        private ISelfOrganizing _organizing;
 
         public KohonenNetwork(int inputNodes, int outputNodes, bool withBias = true)
         {
@@ -40,6 +36,29 @@ namespace KohonenNetwork
             }
 
             Synapse.Generator.EachToEach(_inputLayer, _outputLayer);
+            _learning = new SelfLearning<TFunc>(this);
+            _organizing = new SelfOrganizing<TFunc>(this, 1);
+        }
+
+        public KohonenNetwork<TFunc> SetLearning(ISelfLearning learningAlgorithm)
+        {
+            _learning = learningAlgorithm;
+
+            return this;
+        }
+
+        public KohonenNetwork<TFunc> SetOrganizing(ISelfOrganizing organizingAlgoritgm)
+        {
+            _organizing = organizingAlgoritgm;
+
+            return this;
+        }
+
+        public int GetOutputIndex()
+        {
+            var output = Output();
+
+            return output.Select((o, idx) => new { o, idx }).First(x => x.o == 1).idx;
         }
 
     }
