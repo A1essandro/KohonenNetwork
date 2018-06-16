@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NeuralNetworkConstructor.Network;
 
 namespace KohonenNetwork.Learning
 {
@@ -6,6 +7,8 @@ namespace KohonenNetwork.Learning
     {
 
         void Learn(IEnumerable<double> input);
+
+        void SetNetwork(INetwork network);
 
     }
 }

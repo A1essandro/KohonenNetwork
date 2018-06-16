@@ -11,24 +11,22 @@ namespace KohonenNetwork.Learning
     /// <summary>
     /// Class for learning network
     /// </summary>
-    public class SelfLearning<TFunc> : ISelfLearning
-        where TFunc : IActivationFunction, new()
+    public class SelfLearning : ISelfLearning
     {
 
         public const double DEFAULT_FORCE = 0.15;
 
-        private readonly KohonenNetwork<TFunc> _network;
+        private INetwork _network;
         private readonly double _force;
         private readonly IOrganizing _organizing;
 
         public readonly bool _needOrganize;
 
-        public SelfLearning(KohonenNetwork<TFunc> network, double force = DEFAULT_FORCE, IOrganizing organizingAlgorithm = null)
+        public SelfLearning(double force = DEFAULT_FORCE, IOrganizing organizingAlgorithm = null)
         {
-            _network = network;
             _force = force;
             _organizing = organizingAlgorithm;
-            _needOrganize = organizingAlgorithm == null;
+            _needOrganize = organizingAlgorithm != null;
         }
 
         /// <summary>
@@ -47,12 +45,18 @@ namespace KohonenNetwork.Learning
             var output = _network.Output();
 
             var winnerIndex = Array.IndexOf(output.ToArray(), output.Max());
-            var winner = _network.Layers.Last().Nodes[winnerIndex];
+            var winner = _network.OutputLayer.Nodes[winnerIndex];
 
             foreach (var synapse in (winner as ISlaveNode).Synapses)
             {
-                synapse.ChangeWeight(_force * (synapse.MasterNode.Output() - synapse.Weight));
+                var nodeOutput = synapse.MasterNode.Output();
+                synapse.ChangeWeight(_force * (nodeOutput - synapse.Weight));
             }
+        }
+
+        public void SetNetwork(INetwork network)
+        {
+            _network = network;
         }
 
     }

@@ -19,29 +19,16 @@ namespace KohonenNetwork
         private ISelfLearning _learning;
 
         public KohonenNetwork(int inputNodes, int outputNodes, bool withBias = true)
+            : base(CreateAndGetInputLayer(inputNodes, withBias), CreateAndGetOutputLayer(outputNodes))
         {
-            for (var i = 0; i < inputNodes; i++)
-            {
-                _inputLayer.Nodes.Add(new InputNode());
-            }
-
-            if (withBias)
-            {
-                _inputLayer.Nodes.Add(new InputBias());
-            }
-
-            for (var i = 0; i < inputNodes; i++)
-            {
-                _outputLayer.Nodes.Add(new Neuron<TFunc>());
-            }
-
-            Synapse.Generator.EachToEach(_inputLayer, _outputLayer);
-            _learning = new SelfLearning<TFunc>(this);
+            Synapse.Generator.EachToEach(InputLayer, OutputLayer);
+            SetLearning(new SelfLearning());
         }
 
         public KohonenNetwork<TFunc> SetLearning(ISelfLearning learningAlgorithm)
         {
             _learning = learningAlgorithm;
+            _learning.SetNetwork(this);
 
             return this;
         }
@@ -91,6 +78,33 @@ namespace KohonenNetwork
             var winnerIndex = Array.IndexOf(raw.ToArray(), raw.Max());
             var result = new double[_outputLayer.Nodes.Count];
             result[winnerIndex] = 1;
+
+            return result;
+        }
+
+        private static InputLayer CreateAndGetInputLayer(int qty, bool withBias)
+        {
+            var result = new InputLayer();
+            for (var i = 0; i < qty; i++)
+            {
+                result.Nodes.Add(new InputNode());
+            }
+
+            if (withBias)
+            {
+                result.Nodes.Add(new InputBias());
+            }
+
+            return result;
+        }
+
+        private static Layer CreateAndGetOutputLayer(int qty)
+        {
+            var result = new Layer();
+            for (var i = 0; i < qty; i++)
+            {
+                result.Nodes.Add(new Neuron<TFunc>());
+            }
 
             return result;
         }
