@@ -7,16 +7,19 @@ using NeuralNetworkConstructor.Network;
 using NeuralNetworkConstructor.Network.Layer;
 using NeuralNetworkConstructor.Network.Node;
 using NeuralNetworkConstructor.Network.Node.ActivationFunction;
+using NeuralNetworkConstructor.Network.Node.Synapse;
 
 namespace KohonenNetwork
 {
-    public class KohonenNetwork : Network
+    public class KohonenNetwork<TFunc> : Network
+        where TFunc : IActivationFunction, new()
     {
 
-        private ILayer<INode> _inputLayer = new InputLayer();
+        private ILayer<IInputNode> _inputLayer = new InputLayer();
         private ILayer<INode> _outputLayer = new Layer();
 
         public override ICollection<ILayer<INode>> Layers => new ILayer<INode>[] { _outputLayer };
+
         public override ILayer<INode> OutputLayer => _outputLayer;
 
         public KohonenNetwork(int inputNodes, int outputNodes, bool withBias = true)
@@ -33,8 +36,10 @@ namespace KohonenNetwork
 
             for (var i = 0; i < inputNodes; i++)
             {
-                _outputLayer.Nodes.Add(new Neuron<Gaussian>());
+                _outputLayer.Nodes.Add(new Neuron<TFunc>());
             }
+
+            Synapse.Generator.EachToEach(_inputLayer, _outputLayer);
         }
 
     }
