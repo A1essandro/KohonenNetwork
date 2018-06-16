@@ -5,7 +5,7 @@ using NeuralNetworkConstructor.Network.Node;
 
 namespace KohonenNetwork
 {
-    public class TwoLayersNetwork : Network
+    public abstract class TwoLayersNetwork : Network
     {
         protected readonly ILayer<IInputNode> _inputLayer = new InputLayer();
         protected readonly ILayer<INode> _outputLayer = new Layer();

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace KohonenNetwork
+namespace KohonenNetwork.Learning
 {
     public interface ISelfLearning
     {

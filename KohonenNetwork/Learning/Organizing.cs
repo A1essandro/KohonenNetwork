@@ -6,13 +6,13 @@ using NeuralNetworkConstructor.Network.Node.ActivationFunction;
 using NeuralNetworkConstructor.Network.Node.Summator;
 using NeuralNetworkConstructor.Network.Node.Synapse;
 
-namespace KohonenNetwork
+namespace KohonenNetwork.Learning
 {
 
     /// <summary>
     /// Class for self-organizing of network
     /// </summary>
-    public class SelfOrganizing<TFunc> : ISelfOrganizing
+    public class Organizing<TFunc> : IOrganizing
         where TFunc : IActivationFunction, new()
     {
 
@@ -24,7 +24,7 @@ namespace KohonenNetwork
         /// </summary>
         /// <param name="learning"></param>
         /// <param name="criticalRange">Critical range for decide to start training or add a new neuron</param>
-        public SelfOrganizing(KohonenNetwork<TFunc> network, double criticalRange)
+        public Organizing(KohonenNetwork<TFunc> network, double criticalRange)
         {
             _network = network;
             _criticalRange = criticalRange;
@@ -34,7 +34,7 @@ namespace KohonenNetwork
         /// 
         /// </summary>
         /// <param name="input">Input data for checking</param>
-        public bool Organize(ICollection<double> input)
+        public bool Organize(IEnumerable<double> input)
         {
             _network.Input(input);
             var index = _network.GetOutputIndex();

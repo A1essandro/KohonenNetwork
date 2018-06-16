@@ -5,7 +5,7 @@ using NeuralNetworkConstructor.Network;
 using NeuralNetworkConstructor.Network.Node;
 using NeuralNetworkConstructor.Network.Node.ActivationFunction;
 
-namespace KohonenNetwork
+namespace KohonenNetwork.Learning
 {
 
     /// <summary>
@@ -15,11 +15,16 @@ namespace KohonenNetwork
         where TFunc : IActivationFunction, new()
     {
 
-        internal KohonenNetwork<TFunc> _network;
+        private readonly KohonenNetwork<TFunc> _network;
+        private readonly IOrganizing _organizing;
 
-        public SelfLearning(KohonenNetwork<TFunc> network)
+        public readonly bool _needOrganize;
+
+        public SelfLearning(KohonenNetwork<TFunc> network, IOrganizing organizingAlgorithm = null)
         {
             _network = network;
+            _organizing = organizingAlgorithm;
+            _needOrganize = organizingAlgorithm == null;
         }
 
         /// <summary>
@@ -29,6 +34,11 @@ namespace KohonenNetwork
         /// <param name="force">Force of learning</param>
         public void Learn(ICollection<double> input, double force)
         {
+            if (_needOrganize && _organizing.Organize(input))
+            {
+                return;
+            }
+
             _network.Input(input);
             var output = _network.Output();
 

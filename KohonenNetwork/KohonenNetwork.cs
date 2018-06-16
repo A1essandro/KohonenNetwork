@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KohonenNetwork.Learning;
 using NeuralNetworkConstructor.Constructor;
 using NeuralNetworkConstructor.Network;
 using NeuralNetworkConstructor.Network.Layer;
@@ -16,7 +17,6 @@ namespace KohonenNetwork
     {
 
         private ISelfLearning _learning;
-        private ISelfOrganizing _organizing;
 
         public KohonenNetwork(int inputNodes, int outputNodes, bool withBias = true)
         {
@@ -37,7 +37,6 @@ namespace KohonenNetwork
 
             Synapse.Generator.EachToEach(_inputLayer, _outputLayer);
             _learning = new SelfLearning<TFunc>(this);
-            _organizing = new SelfOrganizing<TFunc>(this, 1);
         }
 
         public KohonenNetwork<TFunc> SetLearning(ISelfLearning learningAlgorithm)
@@ -47,18 +46,34 @@ namespace KohonenNetwork
             return this;
         }
 
-        public KohonenNetwork<TFunc> SetOrganizing(ISelfOrganizing organizingAlgoritgm)
+        public override IEnumerable<double> Output()
         {
-            _organizing = organizingAlgoritgm;
+            var rawResult = base.Output();
 
-            return this;
+            return _prepareResult(rawResult);
+        }
+
+        public override async Task<IEnumerable<double>> OutputAsync()
+        {
+            var rawResult = await base.OutputAsync();
+
+            return _prepareResult(rawResult);
         }
 
         public int GetOutputIndex()
         {
-            var output = Output();
+            var output = base.Output();
 
-            return output.Select((o, idx) => new { o, idx }).First(x => x.o == 1).idx;
+            return Array.IndexOf(output.ToArray(), output.Max());
+        }
+
+        private double[] _prepareResult(IEnumerable<double> raw)
+        {
+            var winnerIndex = Array.IndexOf(raw.ToArray(), raw.Max());
+            var result = new double[_outputLayer.Nodes.Count];
+            result[winnerIndex] = 1;
+
+            return result;
         }
 
     }
