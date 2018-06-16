@@ -5,7 +5,7 @@ namespace KohonenNetwork.Learning
     public interface ISelfLearning
     {
 
-        void Learn(ICollection<double> input, double force);
+        void Learn(IEnumerable<double> input);
 
     }
 }

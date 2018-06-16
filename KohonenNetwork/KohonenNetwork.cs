@@ -46,6 +46,25 @@ namespace KohonenNetwork
             return this;
         }
 
+        public void Learn(IEnumerable<double> input)
+        {
+            _learning.Learn(input);
+        }
+
+        public void Learn(ICollection<IEnumerable<double>> epoch, bool shuffle = true)
+        {
+            if (shuffle)
+            {
+                var random = new Random();
+                epoch = epoch.OrderBy(a => random.NextDouble()).ToArray();
+            }
+
+            foreach (var input in epoch)
+            {
+                _learning.Learn(input);
+            }
+        }
+
         public override IEnumerable<double> Output()
         {
             var rawResult = base.Output();
