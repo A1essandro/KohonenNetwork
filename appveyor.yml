@@ -5,12 +5,17 @@ dotnet_csproj:
   package_version: "{version}"
 before_build:
   - choco install "msbuild-sonarqube-runner" -y
+  - choco install opencover.portable
+  - choco install codecov
   - dotnet restore
 build:
   verbosity: normal
   # publish_nuget: true
 after_build:
   - dotnet pack KohonenNetwork -v=n /p:Configuration=Release /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
+test_script:
+  - OpenCover.Console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:test -output:".\coverage.xml" -oldstyle
+  - codecov -f "coverage.xml
 artifacts:
 - path: '**\*.nupkg'
   name: NuGet Packages
