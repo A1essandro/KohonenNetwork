@@ -3,7 +3,7 @@ using NeuralNetworkConstructor.Network;
 
 namespace KohonenNetwork.Learning
 {
-    public interface ISelfLearning
+    public interface IUnsupervisedLearning
     {
 
         void Learn(IEnumerable<double> input);

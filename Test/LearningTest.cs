@@ -32,12 +32,16 @@ namespace Test
         [Fact]
         public void Learning()
         {
-            var config = new NetworkConfiguration(3, 5);
-            var network = new KohonenNetwork<Logistic>(config);
-            network.SetLearning(new SelfLearning(0.075));
+            var networkConfig = new NetworkConfiguration(3, 5);
+            var learningConfig = new LearningConfiguration
+            {
+                ThetaFactorPerEpoch = 0.95
+            };
+            var network = new KohonenNetwork<Logistic>(networkConfig);
+            var learning = new UnsupervisedLearning(network, learningConfig);
 
             var inputs = _getInputs();
-            network.Learn(inputs, 25);
+            learning.Learn(inputs, 25);
 
             network.Input(_control[0]);
             var res0 = network.GetOutputIndex();
@@ -53,13 +57,17 @@ namespace Test
         [Fact]
         public void Organizing()
         {
-            var config = new NetworkConfiguration(3, 1);
-            var network = new KohonenNetwork<Logistic>(config);
-            var organizing = new Organizing<Logistic>(network, 0.777);
-            network.SetLearning(new SelfLearning(0.075, organizing));
+            var networkConfig = new NetworkConfiguration(3, 1);
+            var network = new KohonenNetwork<Logistic>(networkConfig);
+            var learningConfig = new LearningConfiguration
+            {
+                ThetaFactorPerEpoch = 0.95,
+                OrganizingAlgorithm = new Organizing<Logistic>(network, 0.777)
+            };
+            var learning = new UnsupervisedLearning(network, learningConfig);
 
             var inputs = _getInputs();
-            network.Learn(inputs, 25);
+            learning.Learn(inputs, 25);
 
             network.Input(_control[0]);
             var res0 = network.GetOutputIndex();

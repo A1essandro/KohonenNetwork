@@ -16,8 +16,6 @@ namespace KohonenNetwork
         where TFunc : IActivationFunction, new()
     {
 
-        private ISelfLearning _learning;
-
         public KohonenNetwork(int inputNodes, int outputNodes, bool withBias = false)
             : this(new NetworkConfiguration(inputNodes, outputNodes, withBias))
         {
@@ -27,39 +25,6 @@ namespace KohonenNetwork
             : base(CreateAndGetInputLayer(config.InputLayerNodes, config.CreateBiasNode), CreateAndGetOutputLayer(config.OutputLayerNodes))
         {
             Synapse.Generator.EachToEach(InputLayer, OutputLayer, config.SynapseWeightGenerator);
-            SetLearning(new SelfLearning());
-        }
-
-
-        public KohonenNetwork<TFunc> SetLearning(ISelfLearning learningAlgorithm)
-        {
-            _learning = learningAlgorithm;
-            _learning.SetNetwork(this);
-
-            return this;
-        }
-
-        public void Learn(IEnumerable<double> input)
-        {
-            _learning.Learn(input);
-        }
-
-        public void Learn(ICollection<IEnumerable<double>> epoch, int repeats = 1, bool shuffle = true)
-        {
-            for (var i = 0; i < repeats; i++)
-            {
-                if (shuffle)
-                {
-                    var random = new Random();
-                    epoch = epoch.OrderBy(a => random.NextDouble()).ToArray();
-                }
-
-                foreach (var input in epoch)
-                {
-                    _learning.Learn(input);
-                }
-            }
-
         }
 
         public override IEnumerable<double> Output()
