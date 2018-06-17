@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KohonenNetwork", "KohonenNetwork\KohonenNetwork.csproj", "{9CDB8665-C415-4567-9422-8ED6EC1ABA4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{FF13CBB6-DAFF-433C-A449-8D73B3E7A6A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "Test\Test.csproj", "{FF13CBB6-DAFF-433C-A449-8D73B3E7A6A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
