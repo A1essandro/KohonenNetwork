@@ -44,18 +44,22 @@ namespace KohonenNetwork
             _learning.Learn(input);
         }
 
-        public void Learn(ICollection<IEnumerable<double>> epoch, bool shuffle = true)
+        public void Learn(ICollection<IEnumerable<double>> epoch, int repeats = 1, bool shuffle = true)
         {
-            if (shuffle)
+            for (var i = 0; i < repeats; i++)
             {
-                var random = new Random();
-                epoch = epoch.OrderBy(a => random.NextDouble()).ToArray();
+                if (shuffle)
+                {
+                    var random = new Random();
+                    epoch = epoch.OrderBy(a => random.NextDouble()).ToArray();
+                }
+
+                foreach (var input in epoch)
+                {
+                    _learning.Learn(input);
+                }
             }
 
-            foreach (var input in epoch)
-            {
-                _learning.Learn(input);
-            }
         }
 
         public override IEnumerable<double> Output()
