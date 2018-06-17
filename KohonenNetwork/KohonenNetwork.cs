@@ -18,12 +18,18 @@ namespace KohonenNetwork
 
         private ISelfLearning _learning;
 
-        public KohonenNetwork(int inputNodes, int outputNodes, bool withBias = true)
-            : base(CreateAndGetInputLayer(inputNodes, withBias), CreateAndGetOutputLayer(outputNodes))
+        public KohonenNetwork(int inputNodes, int outputNodes, bool withBias = false)
+            : this(new NetworkConfiguration(inputNodes, outputNodes, withBias))
         {
-            Synapse.Generator.EachToEach(InputLayer, OutputLayer);
+        }
+
+        public KohonenNetwork(NetworkConfiguration config)
+            : base(CreateAndGetInputLayer(config.InputLayerNodes, config.CreateBiasNode), CreateAndGetOutputLayer(config.OutputLayerNodes))
+        {
+            Synapse.Generator.EachToEach(InputLayer, OutputLayer, config.SynapseWeightGenerator);
             SetLearning(new SelfLearning());
         }
+
 
         public KohonenNetwork<TFunc> SetLearning(ISelfLearning learningAlgorithm)
         {

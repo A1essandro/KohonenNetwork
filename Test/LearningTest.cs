@@ -12,20 +12,31 @@ namespace Test
         [Fact]
         public void Learning()
         {
-            var network = new KohonenNetwork<Logistic>(3, 2, false);
-            network.SetLearning(new SelfLearning(0.5));
+            var config = new NetworkConfiguration(3, 5);
+            var network = new KohonenNetwork<Logistic>(config);
+            
+            network.SetLearning(new SelfLearning(0.1));
             var random = new Random();
 
             var control = new double[][]
             {
                 new double[] {1, 0.5, 0},
                 new double[] {0, 0.4, 1},
-                new double[] {0, 0.7, 0.9}
+                new double[] {0, 0.55, 0.9}
             };
 
-            for (var i = 0; i < 25000; i++)
+            for (var i = 0; i < 1000; i++)
             {
-                network.Learn(new double[] { random.NextDouble(), random.NextDouble(), random.NextDouble() });
+                var input = new double[] { random.NextDouble(), random.NextDouble(), random.NextDouble() };
+                if (i % 10 == 0)
+                {
+                    Console.Write(Math.Round(input[0], 2) + " ");
+                    Console.Write(Math.Round(input[1], 2) + " ");
+                    Console.Write(Math.Round(input[2], 2) + " ");
+                    network.Input(input);
+                    Console.Write(" => " + network.GetOutputIndex() + Environment.NewLine);
+                }
+                network.Learn(input);
             }
 
             network.Input(control[0]);
@@ -35,8 +46,8 @@ namespace Test
             network.Input(control[2]);
             var res2 = network.GetOutputIndex();
 
-            Assert.True(res0 != res1);
-            Assert.True(res1 == res2);
+            Assert.NotEqual(res0, res1);
+            Assert.Equal(res1, res2);
         }
 
     }

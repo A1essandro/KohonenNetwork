@@ -45,9 +45,9 @@ namespace KohonenNetwork.Learning
             var output = _network.Output();
 
             var winnerIndex = Array.IndexOf(output.ToArray(), output.Max());
-            var winner = _network.OutputLayer.Nodes[winnerIndex];
+            var winner = _network.OutputLayer.Nodes[winnerIndex] as ISlaveNode;
 
-            foreach (var synapse in (winner as ISlaveNode).Synapses)
+            foreach (var synapse in winner.Synapses)
             {
                 var nodeOutput = synapse.MasterNode.Output();
                 synapse.ChangeWeight(_force * (nodeOutput - synapse.Weight));
