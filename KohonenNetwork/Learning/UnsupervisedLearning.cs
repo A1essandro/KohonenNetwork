@@ -48,7 +48,7 @@ namespace KohonenNetwork.Learning
             }
         }
 
-        public void Learn(IEnumerable<IEnumerable<double>> epoch, int repeats)
+        public void Learn(IEnumerable<IEnumerable<double>> epoch, int repeats = 1)
         {
             var random = new Random();
             var initialTheta = _config.Theta;

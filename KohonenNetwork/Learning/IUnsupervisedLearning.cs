@@ -8,7 +8,7 @@ namespace KohonenNetwork.Learning
 
         void Learn(IEnumerable<double> input);
 
-        void SetNetwork(INetwork network);
+        void Learn(IEnumerable<IEnumerable<double>> epoch, int repeats = 1);
 
     }
 }

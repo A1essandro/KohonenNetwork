@@ -27,19 +27,9 @@ namespace KohonenNetwork
             Synapse.Generator.EachToEach(InputLayer, OutputLayer, config.SynapseWeightGenerator);
         }
 
-        public override IEnumerable<double> Output()
-        {
-            var rawResult = base.Output();
+        public override IEnumerable<double> Output() => _prepareResult(base.Output());
 
-            return _prepareResult(rawResult);
-        }
-
-        public override async Task<IEnumerable<double>> OutputAsync()
-        {
-            var rawResult = await base.OutputAsync();
-
-            return _prepareResult(rawResult);
-        }
+        public override async Task<IEnumerable<double>> OutputAsync() => _prepareResult(await base.OutputAsync());
 
         public int GetOutputIndex()
         {
