@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NeuralNetworkConstructor.Network;
 using NeuralNetworkConstructor.Network.Node;
 using NeuralNetworkConstructor.Network.Node.ActivationFunction;
@@ -36,16 +37,7 @@ namespace KohonenNetwork.Learning
             }
 
             _network.Input(input);
-            var output = _network.Output();
-
-            var winnerIndex = Array.IndexOf(output.ToArray(), output.Max());
-            var winner = _network.OutputLayer.Nodes[winnerIndex] as ISlaveNode;
-
-            foreach (var synapse in winner.Synapses)
-            {
-                var nodeOutput = synapse.MasterNode.Output();
-                synapse.ChangeWeight(_config.Theta * (nodeOutput - synapse.Weight));
-            }
+            _recalcWeights(_network.Output());
         }
 
         public void Learn(IEnumerable<IEnumerable<double>> epoch, int repeats = 1)
@@ -70,10 +62,40 @@ namespace KohonenNetwork.Learning
             _config.Theta = initialTheta;
         }
 
-        public void SetNetwork(INetwork network)
+        public async Task LearnAsync(IEnumerable<double> input)
         {
-            _network = network;
+            if (_config.OrganizingAlgorithm != null && _config.OrganizingAlgorithm.Organize(input))
+            {
+                return;
+            }
+
+            _network.Input(input);
+            _recalcWeights(await _network.OutputAsync().ConfigureAwait(false));
         }
+
+        public async Task LearnAsync(IEnumerable<IEnumerable<double>> epoch, int repeats = 1)
+        {
+            await Task.Run(() => Learn(epoch, repeats));
+        }
+
+        #region private methods
+
+        private void _recalcWeights(IEnumerable<double> output)
+        {
+            _getWinner(output).Synapses.AsParallel().ForAll(async synapse =>
+            {
+                var nodeOutput = await synapse.MasterNode.OutputAsync().ConfigureAwait(false);
+                synapse.ChangeWeight(_config.Theta * (nodeOutput - synapse.Weight));
+            });
+        }
+
+        private ISlaveNode _getWinner(IEnumerable<double> output)
+        {
+            var winnerIndex = Array.IndexOf(output.ToArray(), output.Max());
+            return _network.OutputLayer.Nodes[winnerIndex] as ISlaveNode;
+        }
+
+        #endregion
 
     }
 }

@@ -29,14 +29,27 @@ namespace KohonenNetwork
 
         public override IEnumerable<double> Output() => _prepareResult(base.Output());
 
-        public override async Task<IEnumerable<double>> OutputAsync() => _prepareResult(await base.OutputAsync());
+        public override async Task<IEnumerable<double>> OutputAsync() => _prepareResult(await base.OutputAsync().ConfigureAwait(false));
+
+        public IEnumerable<double> RawOutput() => Output();
+
+        public async Task<IEnumerable<double>> RawOutputAsync() => await OutputAsync().ConfigureAwait(false);
 
         public int GetOutputIndex()
         {
-            var output = base.Output();
+            var output = Output();
 
             return Array.IndexOf(output.ToArray(), output.Max());
         }
+
+        public async Task<int> GetOutputIndexAsync()
+        {
+            var output = await OutputAsync().ConfigureAwait(false);
+
+            return Array.IndexOf(output.ToArray(), output.Max());
+        }
+
+        #region Private methods
 
         private double[] _prepareResult(IEnumerable<double> raw)
         {
@@ -73,6 +86,8 @@ namespace KohonenNetwork
 
             return result;
         }
+
+        #endregion
 
     }
 }

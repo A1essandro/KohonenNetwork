@@ -4,5 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NeuralNetworkConstructor" Version="0.1.53"/>
+    <PackageReference Condition="'$(TargetFramework)'=='netstandard1.3'" Include="System.Linq.Parallel" Version="4.*"/>
   </ItemGroup>
 </Project>

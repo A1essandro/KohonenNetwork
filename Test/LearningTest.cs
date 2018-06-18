@@ -3,6 +3,7 @@ using KohonenNetwork.Learning;
 using NeuralNetworkConstructor.Network.Node.ActivationFunction;
 using Xunit;
 using System;
+using System.Threading.Tasks;
 
 namespace Test
 {
@@ -55,7 +56,7 @@ namespace Test
         }
 
         [Fact]
-        public void Organizing()
+        public async Task Organizing()
         {
             var networkConfig = new NetworkConfiguration(3, 1);
             var network = new KohonenNetwork<Logistic>(networkConfig);
@@ -67,14 +68,14 @@ namespace Test
             var learning = new UnsupervisedLearning(network, learningConfig);
 
             var inputs = _getInputs();
-            learning.Learn(inputs, 25);
+            await learning.LearnAsync(inputs, 25);
 
             network.Input(_control[0]);
-            var res0 = network.GetOutputIndex();
+            var res0 = await network.GetOutputIndexAsync();
             network.Input(_control[1]);
-            var res1 = network.GetOutputIndex();
+            var res1 = await network.GetOutputIndexAsync();
             network.Input(_control[2]);
-            var res2 = network.GetOutputIndex();
+            var res2 = await network.GetOutputIndexAsync();
 
             Assert.NotEqual(res0, res1);
             Assert.Equal(res1, res2);
