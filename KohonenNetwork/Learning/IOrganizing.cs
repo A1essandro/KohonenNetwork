@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace KohonenNetwork.Learning
 {
@@ -6,6 +7,8 @@ namespace KohonenNetwork.Learning
     {
 
         bool Organize(IEnumerable<double> input);
+
+        Task<bool> OrganizeAsync(IEnumerable<double> input);
 
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NeuralNetworkConstructor.Network.Node;
 using NeuralNetworkConstructor.Network.Node.ActivationFunction;
 using NeuralNetworkConstructor.Network.Node.Summator;
@@ -53,12 +54,41 @@ namespace KohonenNetwork.Learning
             return true;
         }
 
+        public async Task<bool> OrganizeAsync(IEnumerable<double> input)
+        {
+            if (_network.OutputLayer.Nodes.Count >= _maxNeurons)
+            {
+                return false;
+            }
+
+            if (await _checkRangeAsync(input).ConfigureAwait(false))
+            {
+                return false;
+            }
+
+            _createNode();
+
+            return true;
+        }
+
+        #region Private methods
+
         private bool _checkRange(IEnumerable<double> input)
         {
             _network.Input(input);
             var index = _network.GetOutputIndex();
-            var outputLayerNodes = _network.OutputLayer.Nodes;
-            var euclidRange = EuclidRangeSummator.GetEuclidRange(outputLayerNodes[index] as ISlaveNode);
+            var euclidRange = EuclidRangeSummator.GetEuclidRange(_network.OutputLayer.Nodes[index] as ISlaveNode);
+
+            return euclidRange < _criticalRange;
+        }
+
+        private async Task<bool> _checkRangeAsync(IEnumerable<double> input)
+        {
+            _network.Input(input);
+            var index = await _network.GetOutputIndexAsync();
+            var euclidRange = await EuclidRangeSummator
+                                        .GetEuclidRangeAsync(_network.OutputLayer.Nodes[index] as ISlaveNode)
+                                        .ConfigureAwait(false);
 
             return euclidRange < _criticalRange;
         }
@@ -72,6 +102,8 @@ namespace KohonenNetwork.Learning
                 newNode.AddSynapse(new Synapse(inputNode, inputNode.Output()));
             }
         }
+
+        #endregion
 
     }
 }

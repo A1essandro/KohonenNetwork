@@ -64,17 +64,19 @@ namespace KohonenNetwork.Learning
 
         public async Task LearnAsync(IEnumerable<double> input)
         {
-            if (_config.OrganizingAlgorithm != null && _config.OrganizingAlgorithm.Organize(input))
+            if (_config.OrganizingAlgorithm != null
+                && await _config.OrganizingAlgorithm.OrganizeAsync(input).ConfigureAwait(false))
             {
                 return;
             }
 
             _network.Input(input);
-            _recalcWeights(await _network.OutputAsync().ConfigureAwait(false));
+            _recalcWeights(await _network.OutputAsync().ConfigureAwait(false)); //OutputAsync() has problem with performance
         }
 
         public async Task LearnAsync(IEnumerable<IEnumerable<double>> epoch, int repeats = 1)
         {
+            //TODO: method _network.OutputAsync() has problem with performance, so just temporarily wrap to the task sync method
             await Task.Run(() => Learn(epoch, repeats));
         }
 
