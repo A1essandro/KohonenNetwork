@@ -40,12 +40,17 @@ namespace KohonenNetwork.Learning
             _recalcWeights(_network.Output());
         }
 
-        public void Learn(IEnumerable<IEnumerable<double>> epoch, int repeats = 1)
+        public void Learn(IEnumerable<IEnumerable<double>> epoch, int? repeats = null)
         {
+            if (!repeats.HasValue)
+            {
+                repeats = _config.DefaultRepeatsNumber;
+            }
+
             var random = new Random();
             var initialTheta = _config.Theta;
 
-            for (var i = 0; i < repeats; i++)
+            for (var i = 0; i < repeats.Value; i++)
             {
                 if (_config.ShuffleEveryEpoch)
                 {
@@ -74,7 +79,7 @@ namespace KohonenNetwork.Learning
             _recalcWeights(await _network.OutputAsync().ConfigureAwait(false)); //OutputAsync() has problem with performance
         }
 
-        public async Task LearnAsync(IEnumerable<IEnumerable<double>> epoch, int repeats = 1)
+        public async Task LearnAsync(IEnumerable<IEnumerable<double>> epoch, int? repeats = null)
         {
             //TODO: method _network.OutputAsync() has problem with performance, so just temporarily wrap to the task sync method
             await Task.Run(() => Learn(epoch, repeats));

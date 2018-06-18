@@ -36,13 +36,14 @@ namespace Test
             var networkConfig = new NetworkConfiguration(3, 5);
             var learningConfig = new LearningConfiguration
             {
-                ThetaFactorPerEpoch = 0.95
+                ThetaFactorPerEpoch = 0.95,
+                DefaultRepeatsNumber = 25
             };
             var network = new KohonenNetwork<Logistic>(networkConfig);
             var learning = new UnsupervisedLearning(network, learningConfig);
 
             var inputs = _getInputs();
-            learning.Learn(inputs, 25);
+            learning.Learn(inputs);
 
             network.Input(_control[0]);
             var res0 = network.GetOutputIndex();

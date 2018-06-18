@@ -11,9 +11,9 @@ namespace KohonenNetwork.Learning
 
         Task LearnAsync(IEnumerable<double> input);
 
-        void Learn(IEnumerable<IEnumerable<double>> epoch, int repeats = 1);
+        void Learn(IEnumerable<IEnumerable<double>> epoch, int? repeats = null);
 
-        Task LearnAsync(IEnumerable<IEnumerable<double>> epoch, int repeats = 1);
+        Task LearnAsync(IEnumerable<IEnumerable<double>> epoch, int? repeats = null);
 
     }
 }
