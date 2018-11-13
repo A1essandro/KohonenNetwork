@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using KohonenNetwork.Learning;
 using NeuralNetworkConstructor.Constructor;
-using NeuralNetworkConstructor.Network;
-using NeuralNetworkConstructor.Network.Layer;
-using NeuralNetworkConstructor.Network.Node;
-using NeuralNetworkConstructor.Network.Node.ActivationFunction;
-using NeuralNetworkConstructor.Network.Node.Synapse;
+using NeuralNetworkConstructor.Structure.ActivationFunctions;
+using NeuralNetworkConstructor.Structure.Layers;
+using NeuralNetworkConstructor.Structure.Nodes;
+using NeuralNetworkConstructor.Structure.Synapses;
 
 namespace KohonenNetwork
 {
@@ -27,24 +26,13 @@ namespace KohonenNetwork
             Synapse.Generator.EachToEach(InputLayer, OutputLayer, config.SynapseWeightGenerator);
         }
 
-        public override IEnumerable<double> Output() => _prepareResult(base.Output());
+        public override async Task<IEnumerable<double>> Output() => _prepareResult(await RawOutput().ConfigureAwait(false));
 
-        public override async Task<IEnumerable<double>> OutputAsync() => _prepareResult(await base.OutputAsync().ConfigureAwait(false));
+        public Task<IEnumerable<double>> RawOutput() => base.Output();
 
-        public IEnumerable<double> RawOutput() => Output();
-
-        public async Task<IEnumerable<double>> RawOutputAsync() => await OutputAsync().ConfigureAwait(false);
-
-        public int GetOutputIndex()
+        public async Task<int> GetOutputIndex()
         {
-            var output = Output();
-
-            return Array.IndexOf(output.ToArray(), output.Max());
-        }
-
-        public async Task<int> GetOutputIndexAsync()
-        {
-            var output = await OutputAsync().ConfigureAwait(false);
+            var output = await Output().ConfigureAwait(false);
 
             return Array.IndexOf(output.ToArray(), output.Max());
         }
@@ -70,7 +58,7 @@ namespace KohonenNetwork
 
             if (withBias)
             {
-                result.Nodes.Add(new InputBias());
+                result.Nodes.Add(new Bias());
             }
 
             return result;
@@ -81,7 +69,7 @@ namespace KohonenNetwork
             var result = new Layer();
             for (var i = 0; i < qty; i++)
             {
-                result.Nodes.Add(new Neuron<TFunc>());
+                result.Nodes.Add(new Neuron());
             }
 
             return result;

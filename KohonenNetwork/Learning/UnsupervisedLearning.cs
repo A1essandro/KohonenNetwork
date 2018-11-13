@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NeuralNetworkConstructor.Network;
-using NeuralNetworkConstructor.Network.Node;
-using NeuralNetworkConstructor.Network.Node.ActivationFunction;
+using NeuralNetworkConstructor.Common;
+using NeuralNetworkConstructor.Networks;
+using NeuralNetworkConstructor.Structure.Nodes;
 
 namespace KohonenNetwork.Learning
 {
@@ -15,32 +15,32 @@ namespace KohonenNetwork.Learning
     public class UnsupervisedLearning : IUnsupervisedLearning
     {
 
-        private INetwork _network;
+        private Network _network;
         private readonly LearningConfiguration _config;
 
-        public UnsupervisedLearning(INetwork network, LearningConfiguration config = null)
+        public UnsupervisedLearning(Network network, LearningConfiguration config = null)
         {
             _network = network;
             _config = config;
         }
 
-        public UnsupervisedLearning(INetwork network, double force, IOrganizing organizingAlgorithm = null)
+        public UnsupervisedLearning(Network network, double force, IOrganizing organizingAlgorithm = null)
             : this(network, new LearningConfiguration(force, organizingAlgorithm))
         {
         }
 
-        public void Learn(IEnumerable<double> input)
+        public async Task Learn(IEnumerable<double> input)
         {
-            if (_config.OrganizingAlgorithm != null && _config.OrganizingAlgorithm.Organize(input))
+            if (_config.OrganizingAlgorithm != null && await _config.OrganizingAlgorithm.Organize(input))
             {
                 return;
             }
 
-            _network.Input(input);
-            _recalcWeights(_network.Output());
+            await _network.Input(input);
+            _recalcWeights(await _network.Output());
         }
 
-        public void Learn(IEnumerable<IEnumerable<double>> epoch, int? repeats = null)
+        public async Task Learn(IEnumerable<IEnumerable<double>> epoch, int? repeats = null)
         {
             if (!repeats.HasValue)
             {
@@ -59,30 +59,12 @@ namespace KohonenNetwork.Learning
 
                 foreach (var input in epoch)
                 {
-                    Learn(input);
+                    await Learn(input);
                 }
 
                 _config.Theta *= _config.ThetaFactorPerEpoch;
             }
             _config.Theta = initialTheta;
-        }
-
-        public async Task LearnAsync(IEnumerable<double> input)
-        {
-            if (_config.OrganizingAlgorithm != null
-                && await _config.OrganizingAlgorithm.OrganizeAsync(input).ConfigureAwait(false))
-            {
-                return;
-            }
-
-            _network.Input(input);
-            _recalcWeights(await _network.OutputAsync().ConfigureAwait(false)); //OutputAsync() has problem with performance
-        }
-
-        public async Task LearnAsync(IEnumerable<IEnumerable<double>> epoch, int? repeats = null)
-        {
-            //TODO: method _network.OutputAsync() has problem with performance, so just temporarily wrap to the task sync method
-            await Task.Run(() => Learn(epoch, repeats));
         }
 
         #region private methods
@@ -91,7 +73,7 @@ namespace KohonenNetwork.Learning
         {
             _getWinner(output).Synapses.AsParallel().ForAll(async synapse =>
             {
-                var nodeOutput = await synapse.MasterNode.OutputAsync().ConfigureAwait(false);
+                var nodeOutput = await synapse.MasterNode.Output().ConfigureAwait(false);
                 synapse.ChangeWeight(_config.Theta * (nodeOutput - synapse.Weight));
             });
         }

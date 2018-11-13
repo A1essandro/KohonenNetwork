@@ -1,9 +1,9 @@
 using System;
 using Xunit;
 using KohonenNetwork;
-using NeuralNetworkConstructor.Network.Layer;
-using NeuralNetworkConstructor.Network.Node.ActivationFunction;
 using System.Linq;
+using NeuralNetworkConstructor.Structure.ActivationFunctions;
+using NeuralNetworkConstructor.Structure.Layers;
 
 namespace Test
 {

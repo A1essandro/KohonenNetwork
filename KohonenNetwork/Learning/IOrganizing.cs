@@ -6,9 +6,7 @@ namespace KohonenNetwork.Learning
     public interface IOrganizing
     {
 
-        bool Organize(IEnumerable<double> input);
-
-        Task<bool> OrganizeAsync(IEnumerable<double> input);
+        Task<bool> Organize(IEnumerable<double> input);
 
     }
 }
