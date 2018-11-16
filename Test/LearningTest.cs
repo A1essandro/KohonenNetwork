@@ -39,7 +39,7 @@ namespace Test
                 ThetaFactorPerEpoch = 0.95,
                 DefaultRepeatsNumber = 25
             };
-            var network = new KohonenNetwork<Logistic>(networkConfig);
+            var network = new KohonenNetwork.KohonenNetwork(networkConfig);
             var learning = new UnsupervisedLearning(network, learningConfig);
 
             var inputs = _getInputs();
@@ -60,11 +60,11 @@ namespace Test
         public async Task Organizing()
         {
             var networkConfig = new NetworkConfiguration(3, 1);
-            var network = new KohonenNetwork<Logistic>(networkConfig);
+            var network = new KohonenNetwork.KohonenNetwork(networkConfig);
             var learningConfig = new LearningConfiguration
             {
                 ThetaFactorPerEpoch = 0.95,
-                OrganizingAlgorithm = new Organizing<Logistic>(network, 0.777)
+                OrganizingAlgorithm = new Organizing(network, 0.777)
             };
             var learning = new UnsupervisedLearning(network, learningConfig);
 

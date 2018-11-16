@@ -11,8 +11,7 @@ using NeuralNetworkConstructor.Structure.Synapses;
 
 namespace KohonenNetwork
 {
-    public class KohonenNetwork<TFunc> : TwoLayersNetwork
-        where TFunc : IActivationFunction, new()
+    public class KohonenNetwork : TwoLayersNetwork
     {
 
         public KohonenNetwork(int inputNodes, int outputNodes, bool withBias = false)
@@ -21,7 +20,7 @@ namespace KohonenNetwork
         }
 
         public KohonenNetwork(NetworkConfiguration config)
-            : base(CreateAndGetInputLayer(config.InputLayerNodes, config.CreateBiasNode), CreateAndGetOutputLayer(config.OutputLayerNodes))
+            : base(LayerGenerator.GenerateInputLayer(config.InputLayerNodes, config.CreateBiasNode), LayerGenerator.GenerateOutputLayer(config.OutputLayerNodes))
         {
             Synapse.Generator.EachToEach(InputLayer, OutputLayer, config.SynapseWeightGenerator);
         }
@@ -30,50 +29,20 @@ namespace KohonenNetwork
 
         public Task<IEnumerable<double>> RawOutput() => base.Output();
 
-        public async Task<int> GetOutputIndex()
-        {
-            var output = await Output().ConfigureAwait(false);
-
-            return Array.IndexOf(output.ToArray(), output.Max());
-        }
+        public async Task<int> GetOutputIndex() => _getWinnerIndex(await Output().ConfigureAwait(false));
 
         #region Private methods
 
         private double[] _prepareResult(IEnumerable<double> raw)
         {
-            var winnerIndex = Array.IndexOf(raw.ToArray(), raw.Max());
+            var winnerIndex = _getWinnerIndex(raw);
             var result = new double[_outputLayer.Nodes.Count];
             result[winnerIndex] = 1;
 
             return result;
         }
 
-        private static InputLayer CreateAndGetInputLayer(int qty, bool withBias)
-        {
-            var result = new InputLayer();
-            for (var i = 0; i < qty; i++)
-            {
-                result.Nodes.Add(new InputNode());
-            }
-
-            if (withBias)
-            {
-                result.Nodes.Add(new Bias());
-            }
-
-            return result;
-        }
-
-        private static Layer CreateAndGetOutputLayer(int qty)
-        {
-            var result = new Layer();
-            for (var i = 0; i < qty; i++)
-            {
-                result.Nodes.Add(new Neuron());
-            }
-
-            return result;
-        }
+        private int _getWinnerIndex(IEnumerable<double> raw) => Array.IndexOf(raw.ToArray(), raw.Max());
 
         #endregion
 

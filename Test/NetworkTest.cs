@@ -13,7 +13,7 @@ namespace Test
         [Fact]
         public void LayersTest()
         {
-            var network = new KohonenNetwork<Gaussian>(5, 2);
+            var network = new KohonenNetwork.KohonenNetwork(5, 2);
 
             Assert.Equal(1, network.Layers.Count());
             Assert.Throws<NotSupportedException>(() => network.Layers.Add(new Layer()));
@@ -24,8 +24,8 @@ namespace Test
         [Fact]
         public void NodesTest()
         {
-            var network0 = new KohonenNetwork<Gaussian>(5, 2, false);
-            var network1 = new KohonenNetwork<Gaussian>(5, 2, true);
+            var network0 = new KohonenNetwork.KohonenNetwork(5, 2, false);
+            var network1 = new KohonenNetwork.KohonenNetwork(5, 2, true);
 
             Assert.Equal(5, network0.InputLayer.Nodes.Count());
             Assert.Equal(6, network1.InputLayer.Nodes.Count());

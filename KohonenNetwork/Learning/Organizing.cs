@@ -13,11 +13,10 @@ namespace KohonenNetwork.Learning
     /// <summary>
     /// Class for self-organizing of network
     /// </summary>
-    public class Organizing<TFunc> : IOrganizing
-        where TFunc : IActivationFunction, new()
+    public class Organizing : IOrganizing
     {
 
-        private readonly KohonenNetwork<TFunc> _network;
+        private readonly KohonenNetwork _network;
         private readonly double _criticalRange;
         private readonly int _maxNeurons;
 
@@ -26,7 +25,7 @@ namespace KohonenNetwork.Learning
         /// </summary>
         /// <param name="learning"></param>
         /// <param name="criticalRange">Critical range for decide to start training or add a new neuron</param>
-        public Organizing(KohonenNetwork<TFunc> network, double criticalRange, int maxOutputNeurons = int.MaxValue)
+        public Organizing(KohonenNetwork network, double criticalRange, int maxOutputNeurons = int.MaxValue)
         {
             _network = network;
             _criticalRange = criticalRange;
