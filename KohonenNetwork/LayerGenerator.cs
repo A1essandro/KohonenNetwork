@@ -11,12 +11,12 @@ namespace KohonenNetwork
             var result = new InputLayer();
             for (var i = 0; i < qty; i++)
             {
-                result.Nodes.Add(new InputNode());
+                result.AddNode(new InputNode());
             }
 
             if (withBias)
             {
-                result.Nodes.Add(new Bias());
+                result.AddNode(new Bias());
             }
 
             return result;
@@ -27,7 +27,7 @@ namespace KohonenNetwork
             var result = new Layer();
             for (var i = 0; i < qty; i++)
             {
-                result.Nodes.Add(new Neuron());
+                result.AddNode(new Neuron());
             }
 
             return result;
