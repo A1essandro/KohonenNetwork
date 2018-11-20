@@ -36,7 +36,7 @@ namespace KohonenNetwork.Learning
                 return;
             }
 
-            await _network.Input(input);
+            _network.Input(input);
             _recalcWeights(await _network.Output());
         }
 
@@ -81,7 +81,7 @@ namespace KohonenNetwork.Learning
         private ISlaveNode _getWinner(IEnumerable<double> output)
         {
             var winnerIndex = Array.IndexOf(output.ToArray(), output.Max());
-            return _network.OutputLayer.Nodes[winnerIndex] as ISlaveNode;
+            return _network.OutputLayer.Nodes.ToArray()[winnerIndex] as ISlaveNode;
         }
 
         #endregion

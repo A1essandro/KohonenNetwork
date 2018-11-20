@@ -45,11 +45,11 @@ namespace Test
             var inputs = _getInputs();
             await learning.Learn(inputs);
 
-            await network.Input(_control[0]);
+            network.Input(_control[0]);
             var res0 = network.GetOutputIndex();
-            await network.Input(_control[1]);
+            network.Input(_control[1]);
             var res1 = network.GetOutputIndex();
-            await network.Input(_control[2]);
+            network.Input(_control[2]);
             var res2 = network.GetOutputIndex();
 
             Assert.NotEqual(res0, res1);
@@ -71,11 +71,11 @@ namespace Test
             var inputs = _getInputs();
             await learning.Learn(inputs, 25);
 
-            await network.Input(_control[0]);
+            network.Input(_control[0]);
             var res0 = await network.GetOutputIndex();
-            await network.Input(_control[1]);
+            network.Input(_control[1]);
             var res1 = await network.GetOutputIndex();
-            await network.Input(_control[2]);
+            network.Input(_control[2]);
             var res2 = await network.GetOutputIndex();
 
             Assert.NotEqual(res0, res1);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NeuralNetworkConstructor.Structure.ActivationFunctions;
+using NeuralNetworkConstructor.Structure.Layers;
 using NeuralNetworkConstructor.Structure.Nodes;
 using NeuralNetworkConstructor.Structure.Summators;
 using NeuralNetworkConstructor.Structure.Synapses;
@@ -35,7 +36,7 @@ namespace KohonenNetwork.Learning
         
         public async Task<bool> Organize(IEnumerable<double> input)
         {
-            if (_network.OutputLayer.Nodes.Count >= _maxNeurons)
+            if (_network.OutputLayer.Nodes.Count() >= _maxNeurons)
             {
                 return false;
             }
@@ -54,10 +55,11 @@ namespace KohonenNetwork.Learning
 
         private async Task<bool> _checkRangeAsync(IEnumerable<double> input)
         {
-            await _network.Input(input);
+            _network.Input(input);
             var index = await _network.GetOutputIndex();
+            var outputNodes = _network.OutputLayer.Nodes.ToArray();
             var euclidRange = await EuclidRangeSummator
-                                        .GetEuclidRange(_network.OutputLayer.Nodes[index] as ISlaveNode)
+                                        .GetEuclidRange(outputNodes[index] as ISlaveNode)
                                         .ConfigureAwait(false);
 
             return euclidRange < _criticalRange;
@@ -66,7 +68,7 @@ namespace KohonenNetwork.Learning
         private async Task _createNode()
         {
             var newNode = new Neuron();
-            _network.OutputLayer.Nodes.Add(newNode);
+            (_network.OutputLayer as ILayer<ISlaveNode>).AddNode(newNode);
             foreach (INode inputNode in _network.InputLayer.Nodes)
             {
                 newNode.AddSynapse(new Synapse(inputNode, await inputNode.Output()));

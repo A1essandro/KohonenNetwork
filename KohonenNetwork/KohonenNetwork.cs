@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KohonenNetwork.Learning;
 using NeuralNetworkConstructor.Constructor;
+using NeuralNetworkConstructor.Constructor.Generators;
 using NeuralNetworkConstructor.Structure.ActivationFunctions;
 using NeuralNetworkConstructor.Structure.Layers;
 using NeuralNetworkConstructor.Structure.Nodes;
@@ -23,7 +24,8 @@ namespace KohonenNetwork
         public KohonenNetwork(NetworkConfiguration config)
             : base(CreateAndGetInputLayer(config.InputLayerNodes, config.CreateBiasNode), CreateAndGetOutputLayer(config.OutputLayerNodes))
         {
-            Synapse.Generator.EachToEach(InputLayer, OutputLayer, config.SynapseWeightGenerator);
+            var generator = new EachToEachSynapseGenerator<Synapse>();
+            generator.Generate(InputLayer, OutputLayer);
         }
 
         public override async Task<IEnumerable<double>> Output() => _prepareResult(await RawOutput().ConfigureAwait(false));
@@ -42,7 +44,7 @@ namespace KohonenNetwork
         private double[] _prepareResult(IEnumerable<double> raw)
         {
             var winnerIndex = Array.IndexOf(raw.ToArray(), raw.Max());
-            var result = new double[_outputLayer.Nodes.Count];
+            var result = new double[_outputLayer.Nodes.Count()];
             result[winnerIndex] = 1;
 
             return result;
@@ -53,12 +55,12 @@ namespace KohonenNetwork
             var result = new InputLayer();
             for (var i = 0; i < qty; i++)
             {
-                result.Nodes.Add(new InputNode());
+                result.AddNode(new InputNode());
             }
 
             if (withBias)
             {
-                result.Nodes.Add(new Bias());
+                result.AddNode(new Bias());
             }
 
             return result;
@@ -69,7 +71,7 @@ namespace KohonenNetwork
             var result = new Layer();
             for (var i = 0; i < qty; i++)
             {
-                result.Nodes.Add(new Neuron());
+                result.AddNode(new Neuron());
             }
 
             return result;

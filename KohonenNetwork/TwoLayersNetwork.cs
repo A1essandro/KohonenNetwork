@@ -8,17 +8,17 @@ namespace KohonenNetwork
     public abstract class TwoLayersNetwork : Network
     {
 
-        protected TwoLayersNetwork(IInputLayer inputLayer, ILayer<INotInputNode> outputLayer)
+        protected TwoLayersNetwork(IInputLayer inputLayer, IReadOnlyLayer<INotInputNode> outputLayer)
             : base(inputLayer, outputLayer)
         {
             _outputLayer = outputLayer;
         }
 
-        protected readonly ILayer<INotInputNode> _outputLayer = new Layer();
+        protected readonly IReadOnlyLayer<INotInputNode> _outputLayer = new Layer();
 
-        public override ICollection<ILayer<INotInputNode>> Layers => new ILayer<INotInputNode>[] { _outputLayer };
+        public override ICollection<IReadOnlyLayer<INotInputNode>> Layers => new IReadOnlyLayer<INotInputNode>[] { _outputLayer };
 
-        public override ILayer<INotInputNode> OutputLayer => _outputLayer;
+        public override IReadOnlyLayer<INotInputNode> OutputLayer => _outputLayer;
 
     }
 }
