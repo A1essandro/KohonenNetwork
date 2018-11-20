@@ -67,8 +67,8 @@ namespace KohonenNetwork.Learning
         private async Task _createNode()
         {
             var newNode = new Neuron();
-            (_network.OutputLayer as ILayer<ISlaveNode>).AddNode(newNode);
-            foreach (INode inputNode in _network.InputLayer.Nodes)
+            ((ILayer<INotInputNode>)_network.OutputLayer).AddNode(newNode);
+            foreach (INode inputNode in _network.InputLayer.Nodes.OfType<ISlaveNode>())
             {
                 newNode.AddSynapse(new Synapse(inputNode, await inputNode.Output()));
             }
