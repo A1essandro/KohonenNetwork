@@ -4,6 +4,7 @@ using KohonenNetwork;
 using System.Linq;
 using NeuralNetworkConstructor.Structure.ActivationFunctions;
 using NeuralNetworkConstructor.Structure.Layers;
+using NeuralNetworkConstructor.Structure.Nodes;
 
 namespace Test
 {
@@ -13,7 +14,9 @@ namespace Test
         [Fact]
         public void LayersTest()
         {
-            var network = new KohonenNetwork.KohonenNetwork(5, 2);
+            var inputLayer = new InputLayer(() => new InputNode(), 5);
+            var outputLayer = new Layer(() => new Neuron(), 2);
+            var network = new KohonenNetwork.KohonenNetwork(inputLayer, outputLayer);
 
             Assert.Equal(1, network.Layers.Count());
             Assert.Throws<NotSupportedException>(() => network.Layers.Add(new Layer()));
@@ -24,12 +27,12 @@ namespace Test
         [Fact]
         public void NodesTest()
         {
-            var network0 = new KohonenNetwork.KohonenNetwork(5, 2, false);
-            var network1 = new KohonenNetwork.KohonenNetwork(5, 2, true);
+            var inputLayer = new InputLayer(() => new InputNode(), 5);
+            var outputLayer = new Layer(() => new Neuron(), 2);
+            var network = new KohonenNetwork.KohonenNetwork(inputLayer, outputLayer);
 
-            Assert.Equal(5, network0.InputLayer.Nodes.Count());
-            Assert.Equal(6, network1.InputLayer.Nodes.Count());
-            Assert.Equal(2, network0.OutputLayer.Nodes.Count());
+            Assert.Equal(5, network.InputLayer.Nodes.Count());
+            Assert.Equal(2, network.OutputLayer.Nodes.Count());
         }
     }
 }

@@ -4,6 +4,8 @@ using Xunit;
 using System;
 using System.Threading.Tasks;
 using NeuralNetworkConstructor.Structure.ActivationFunctions;
+using NeuralNetworkConstructor.Structure.Layers;
+using NeuralNetworkConstructor.Structure.Nodes;
 
 namespace Test
 {
@@ -33,13 +35,15 @@ namespace Test
         [Fact]
         public async Task Learning()
         {
-            var networkConfig = new NetworkConfiguration(3, 5);
+            var inputLayer = new InputLayer(() => new InputNode(), 3);
+            var outputLayer = new Layer(() => new Neuron(), 5);
+
             var learningConfig = new LearningConfiguration
             {
                 ThetaFactorPerEpoch = 0.95,
                 DefaultRepeatsNumber = 25
             };
-            var network = new KohonenNetwork.KohonenNetwork(networkConfig);
+            var network = new KohonenNetwork.KohonenNetwork(inputLayer, outputLayer);
             var learning = new UnsupervisedLearning(network, learningConfig);
 
             var inputs = _getInputs();
@@ -59,8 +63,10 @@ namespace Test
         [Fact]
         public async Task Organizing()
         {
-            var networkConfig = new NetworkConfiguration(3, 1);
-            var network = new KohonenNetwork.KohonenNetwork(networkConfig);
+            var inputLayer = new InputLayer(() => new InputNode(), 3);
+            var outputLayer = new Layer(new Neuron());
+            var network = new KohonenNetwork.KohonenNetwork(inputLayer, outputLayer);
+            
             var learningConfig = new LearningConfiguration
             {
                 ThetaFactorPerEpoch = 0.95,

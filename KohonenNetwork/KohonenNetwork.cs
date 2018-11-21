@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using KohonenNetwork.Learning;
 using NeuralNetworkConstructor.Constructor;
@@ -15,26 +16,35 @@ namespace KohonenNetwork
     public class KohonenNetwork : TwoLayersNetwork
     {
 
-        public KohonenNetwork(int inputNodes, int outputNodes, bool withBias = false)
-            : this(new NetworkConfiguration(inputNodes, outputNodes, withBias))
+        public KohonenNetwork(IReadOnlyLayer<IMasterNode> inputLayer, IReadOnlyLayer<INotInputNode> outputLayer)
+            : base(inputLayer, outputLayer)
         {
         }
 
-        public KohonenNetwork(NetworkConfiguration config)
-            : base(LayerGenerator.GenerateInputLayer(config.InputLayerNodes, config.CreateBiasNode), LayerGenerator.GenerateOutputLayer(config.OutputLayerNodes))
-        {
-            var generator = new EachToEachSynapseGenerator<Synapse>();
-            generator.Generate(InputLayer, OutputLayer);
-        }
-
+        /// <summary>
+        /// Get prepeared result (values {0, 1})
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override async Task<IEnumerable<double>> Output() => _prepareResult(await RawOutput().ConfigureAwait(false));
 
+        /// <summary>
+        /// Get unprepared result
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Task<IEnumerable<double>> RawOutput() => base.Output();
 
+        /// <summary>
+        /// Get index of neuron with maximum result output
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public async Task<int> GetOutputIndex() => _getWinnerIndex(await Output().ConfigureAwait(false));
 
         #region Private methods
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private double[] _prepareResult(IEnumerable<double> raw)
         {
             var winnerIndex = _getWinnerIndex(raw);
@@ -44,6 +54,7 @@ namespace KohonenNetwork
             return result;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int _getWinnerIndex(IEnumerable<double> raw) => Array.IndexOf(raw.ToArray(), raw.Max());
 
         #endregion
