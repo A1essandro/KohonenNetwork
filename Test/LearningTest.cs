@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NeuralNetworkConstructor.Structure.ActivationFunctions;
 using NeuralNetworkConstructor.Structure.Layers;
 using NeuralNetworkConstructor.Structure.Nodes;
+using NeuralNetworkConstructor.Learning;
 
 namespace Test
 {
@@ -60,13 +61,45 @@ namespace Test
             Assert.Equal(res1, res2);
         }
 
+        // [Fact]
+        // public async Task Learning1()
+        // {
+        //     var inputLayer = new InputLayer(() => new InputNode(), 3);
+        //     var outputLayer = new Layer(() => new Neuron(), 5);
+
+        //     var learningConfig = new LearningConfiguration
+        //     {
+        //         ThetaFactorPerEpoch = 0.95,
+        //         DefaultRepeatsNumber = 25
+        //     };
+        //     var network = new KohonenNetwork.KohonenNetwork(inputLayer, outputLayer);
+        //     var strategy = new KohonenNetwork.Learning.Strategy.UnsupervisedLearning();
+        //     var learning = new Learning<KohonenNetwork.KohonenNetwork>(network, strategy, new LearningSettings{
+        //         Repeats = 100,
+        //         ThetaFactorPerEpoch = 0.975
+        //     });
+
+        //     var inputs = _getInputs();
+        //     await learning.Learn(inputs);
+
+        //     network.Input(_control[0]);
+        //     var res0 = network.GetOutputIndex();
+        //     network.Input(_control[1]);
+        //     var res1 = network.GetOutputIndex();
+        //     network.Input(_control[2]);
+        //     var res2 = network.GetOutputIndex();
+
+        //     Assert.NotEqual(res0, res1);
+        //     Assert.Equal(res1, res2);
+        // }
+
         [Fact]
         public async Task Organizing()
         {
             var inputLayer = new InputLayer(() => new InputNode(), 3);
             var outputLayer = new Layer(new Neuron());
             var network = new KohonenNetwork.KohonenNetwork(inputLayer, outputLayer);
-            
+
             var learningConfig = new LearningConfiguration
             {
                 ThetaFactorPerEpoch = 0.95,
