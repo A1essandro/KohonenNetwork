@@ -2,11 +2,17 @@ using KohonenNetwork;
 using KohonenNetwork.Learning;
 using Xunit;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NeuralNetworkConstructor.Structure.ActivationFunctions;
 using NeuralNetworkConstructor.Structure.Layers;
 using NeuralNetworkConstructor.Structure.Nodes;
 using NeuralNetworkConstructor.Learning;
+using NeuralNetworkConstructor.Learning.Samples;
+using NeuralNetworkConstructor.Constructor.Generators;
+using NeuralNetworkConstructor.Structure.Synapses;
+using KNetwork = KohonenNetwork.KohonenNetwork;
 
 namespace Test
 {
@@ -34,81 +40,23 @@ namespace Test
         }
 
         [Fact]
-        public async Task Learning()
+        public async Task Learning1()
         {
             var inputLayer = new InputLayer(() => new InputNode(), 3);
             var outputLayer = new Layer(() => new Neuron(), 5);
 
-            var learningConfig = new LearningConfiguration
-            {
-                ThetaFactorPerEpoch = 0.95,
-                DefaultRepeatsNumber = 25
-            };
-            var network = new KohonenNetwork.KohonenNetwork(inputLayer, outputLayer);
-            var learning = new UnsupervisedLearning(network, learningConfig);
+            new EachToEachSynapseGenerator<Synapse>().Generate(inputLayer, outputLayer);
 
-            var inputs = _getInputs();
+            var network = new KNetwork(inputLayer, outputLayer);
+            var strategy = new KohonenNetwork.Learning.Strategy.UnsupervisedLearning();
+            var learning = new Learning<KNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
+            {
+                EpochRepeats = 100,
+                ThetaFactorPerEpoch = x => 0.975
+            });
+
+            var inputs = _getInputs().Select(x => new SelfLearningSample(x));
             await learning.Learn(inputs);
-
-            network.Input(_control[0]);
-            var res0 = network.GetOutputIndex();
-            network.Input(_control[1]);
-            var res1 = network.GetOutputIndex();
-            network.Input(_control[2]);
-            var res2 = network.GetOutputIndex();
-
-            Assert.NotEqual(res0, res1);
-            Assert.Equal(res1, res2);
-        }
-
-        // [Fact]
-        // public async Task Learning1()
-        // {
-        //     var inputLayer = new InputLayer(() => new InputNode(), 3);
-        //     var outputLayer = new Layer(() => new Neuron(), 5);
-
-        //     var learningConfig = new LearningConfiguration
-        //     {
-        //         ThetaFactorPerEpoch = 0.95,
-        //         DefaultRepeatsNumber = 25
-        //     };
-        //     var network = new KohonenNetwork.KohonenNetwork(inputLayer, outputLayer);
-        //     var strategy = new KohonenNetwork.Learning.Strategy.UnsupervisedLearning();
-        //     var learning = new Learning<KohonenNetwork.KohonenNetwork>(network, strategy, new LearningSettings{
-        //         Repeats = 100,
-        //         ThetaFactorPerEpoch = 0.975
-        //     });
-
-        //     var inputs = _getInputs();
-        //     await learning.Learn(inputs);
-
-        //     network.Input(_control[0]);
-        //     var res0 = network.GetOutputIndex();
-        //     network.Input(_control[1]);
-        //     var res1 = network.GetOutputIndex();
-        //     network.Input(_control[2]);
-        //     var res2 = network.GetOutputIndex();
-
-        //     Assert.NotEqual(res0, res1);
-        //     Assert.Equal(res1, res2);
-        // }
-
-        [Fact]
-        public async Task Organizing()
-        {
-            var inputLayer = new InputLayer(() => new InputNode(), 3);
-            var outputLayer = new Layer(new Neuron());
-            var network = new KohonenNetwork.KohonenNetwork(inputLayer, outputLayer);
-
-            var learningConfig = new LearningConfiguration
-            {
-                ThetaFactorPerEpoch = 0.95,
-                OrganizingAlgorithm = new Organizing(network, 0.777)
-            };
-            var learning = new UnsupervisedLearning(network, learningConfig);
-
-            var inputs = _getInputs();
-            await learning.Learn(inputs, 25);
 
             network.Input(_control[0]);
             var res0 = await network.GetOutputIndex();

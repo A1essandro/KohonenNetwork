@@ -9,11 +9,11 @@ using NeuralNetworkConstructor.Structure.Nodes;
 
 namespace KohonenNetwork.Learning.Strategy
 {
-    public class UnsupervisedLearning : ILearningStrategy<TwoLayersNetwork, ISelfLearningSample>
+    public class UnsupervisedLearning : UnsupervisedLarningStrategyBase
     {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Task LearnSample(TwoLayersNetwork network, ISelfLearningSample sample, double theta)
+        public override Task LearnSample(KohonenNetwork network, ISelfLearningSample sample, double theta)
         {
             network.Input(sample.Input);
             return _recalcWeights(network, theta);
@@ -22,21 +22,14 @@ namespace KohonenNetwork.Learning.Strategy
         #region private methods
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private async Task _recalcWeights(TwoLayersNetwork network, double theta)
+        private async Task _recalcWeights(KohonenNetwork network, double theta)
         {
             var output = await network.Output().ConfigureAwait(false);
-            _getWinner(network, output, theta).Synapses.AsParallel().ForAll(async synapse =>
+            GetWinner(network, output, theta).Synapses.AsParallel().ForAll(async synapse =>
             {
                 var nodeOutput = await synapse.MasterNode.Output().ConfigureAwait(false);
                 synapse.ChangeWeight(theta * (nodeOutput - synapse.Weight));
             });
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private ISlaveNode _getWinner(TwoLayersNetwork network, IEnumerable<double> output, double theta)
-        {
-            var winnerIndex = Array.IndexOf(output.ToArray(), output.Max());
-            return network.OutputLayer.Nodes.ToArray()[winnerIndex] as ISlaveNode;
         }
 
         #endregion

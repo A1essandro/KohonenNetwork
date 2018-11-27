@@ -14,6 +14,7 @@ namespace KohonenNetwork.Learning
     /// <summary>
     /// Class for self-organizing of network
     /// </summary>
+    [Obsolete]
     public class Organizing : IOrganizing
     {
 

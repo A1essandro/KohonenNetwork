@@ -3,7 +3,8 @@
     <TargetFramework>netstandard1.3</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NeuralNetworkConstructor" Version="0.3.106-alpha"/>
+    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
+    <PackageReference Include="NeuralNetworkConstructor" Version="0.3.107-alpha"/>
     <PackageReference Condition="'$(TargetFramework)'=='netstandard1.3'" Include="System.Linq.Parallel" Version="4.*"/>
   </ItemGroup>
 </Project>
