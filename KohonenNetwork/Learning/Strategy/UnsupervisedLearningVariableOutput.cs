@@ -64,7 +64,7 @@ namespace KohonenNetwork.Learning.Strategy
 
         private async Task<bool> _needNewNeuron(KohonenNetwork network)
         {
-            if (network.OutputLayer.Nodes.Count() >= _maxNeurons)
+            if (network.OutputLayer.NodesQuantity >= _maxNeurons)
             {
                 return false;
             }

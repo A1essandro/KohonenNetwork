@@ -5,10 +5,11 @@ using NeuralNetworkConstructor.Structure.Nodes;
 
 namespace KohonenNetwork
 {
-    public abstract class TwoLayersNetwork : Network
+    public abstract class TwoLayersNetwork<TLayer> : Network
+        where TLayer : IReadOnlyLayer<INotInputNode>
     {
 
-        protected TwoLayersNetwork(IReadOnlyLayer<IMasterNode> inputLayer, IReadOnlyLayer<INotInputNode> outputLayer)
+        protected TwoLayersNetwork(IReadOnlyLayer<IMasterNode> inputLayer, TLayer outputLayer)
             : base(inputLayer, outputLayer)
         {
             _outputLayer = outputLayer;
@@ -19,6 +20,8 @@ namespace KohonenNetwork
         public override ICollection<IReadOnlyLayer<INotInputNode>> Layers => new IReadOnlyLayer<INotInputNode>[] { _outputLayer };
 
         public override IReadOnlyLayer<INotInputNode> OutputLayer => _outputLayer;
+
+        public TLayer OutputProjection => (TLayer)_outputLayer;
 
     }
 }

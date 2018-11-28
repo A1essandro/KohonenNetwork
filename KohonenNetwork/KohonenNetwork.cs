@@ -13,10 +13,11 @@ using NeuralNetworkConstructor.Structure.Synapses;
 
 namespace KohonenNetwork
 {
-    public class KohonenNetwork : TwoLayersNetwork
+    public class KohonenNetwork<TLayer> : TwoLayersNetwork<TLayer>
+        where TLayer : IReadOnlyLayer<INotInputNode>
     {
 
-        public KohonenNetwork(IReadOnlyLayer<IMasterNode> inputLayer, IReadOnlyLayer<INotInputNode> outputLayer)
+        public KohonenNetwork(IReadOnlyLayer<IMasterNode> inputLayer, TLayer outputLayer)
             : base(inputLayer, outputLayer)
         {
         }
@@ -68,4 +69,15 @@ namespace KohonenNetwork
         #endregion
 
     }
+
+    public class KohonenNetwork : KohonenNetwork<IReadOnlyLayer<INotInputNode>>
+    {
+
+        public KohonenNetwork(IReadOnlyLayer<IMasterNode> inputLayer, IReadOnlyLayer<INotInputNode> outputLayer)
+            : base(inputLayer, outputLayer)
+        {
+        }
+
+    }
+
 }

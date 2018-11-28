@@ -25,6 +25,17 @@ namespace Test
         }
 
         [Fact]
+        public void ProjectionTest()
+        {
+            var inputLayer = new InputLayer(() => new InputNode(), 5);
+            var outputLayer = new Layer2D<INotInputNode>(() => new Neuron(), 6, 3, 2);
+            var network = new KohonenNetwork<Layer2D<INotInputNode>>(inputLayer, outputLayer);
+
+            Assert.Equal(3, network.OutputProjection.Projection.GetLength(0));
+            Assert.Equal(2, network.OutputProjection.Projection.GetLength(1));
+        }
+
+        [Fact]
         public void NodesTest()
         {
             var inputLayer = new InputLayer(() => new InputNode(), 5);
