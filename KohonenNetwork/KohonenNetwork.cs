@@ -40,7 +40,7 @@ namespace KohonenNetwork
         /// </summary>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public async Task<int> GetOutputIndex() => _getWinnerIndex(await Output().ConfigureAwait(false));
+        public async Task<int?> GetOutputIndex() => _getWinnerIndex(await Output().ConfigureAwait(false));
 
         #region Private methods
 
@@ -49,13 +49,21 @@ namespace KohonenNetwork
         {
             var winnerIndex = _getWinnerIndex(raw);
             var result = new double[_outputLayer.Nodes.Count()];
-            result[winnerIndex] = 1;
+            if (winnerIndex.HasValue)
+            {
+                result[winnerIndex.Value] = 1;
+            }
 
             return result;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int _getWinnerIndex(IEnumerable<double> raw) => Array.IndexOf(raw.ToArray(), raw.Max());
+        private int? _getWinnerIndex(IEnumerable<double> raw)
+        {
+            return raw.Count() > 0
+                ? Array.IndexOf(raw.ToArray(), raw.Max())
+                : new int?();
+        }
 
         #endregion
 

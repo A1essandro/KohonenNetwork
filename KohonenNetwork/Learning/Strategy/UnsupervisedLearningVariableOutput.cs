@@ -18,7 +18,6 @@ namespace KohonenNetwork.Learning.Strategy
 
         private readonly double _criticalRange;
         private readonly int _maxNeurons;
-        private readonly Func<IMasterNode, int, ISynapse> _synapseFactory;
 
         public UnsupervisedLearningVariableOutput(double criticalRange, int maxOutputNeurons = int.MaxValue)
         {
@@ -48,12 +47,10 @@ namespace KohonenNetwork.Learning.Strategy
 
         private async Task _createNode(KohonenNetwork network)
         {
-            var index = 0;
             var newNode = new Neuron();
             ((ILayer<INotInputNode>)network.OutputLayer).AddNode(newNode);
             foreach (var inputNode in network.InputLayer.Nodes.OfType<IMasterNode>())
             {
-                var synapse = _synapseFactory(inputNode, index++);
                 newNode.AddSynapse(new Synapse(inputNode, await inputNode.Output()));
             }
         }
@@ -76,9 +73,11 @@ namespace KohonenNetwork.Learning.Strategy
         private async Task<bool> _checkRangeAsync(KohonenNetwork network)
         {
             var index = await network.GetOutputIndex();
+            if (!index.HasValue)
+                return false;
             var outputNodes = network.OutputLayer.Nodes.ToArray();
             var euclidRange = await EuclidRangeSummator
-                                        .GetEuclidRange(outputNodes[index] as ISlaveNode)
+                                        .GetEuclidRange(outputNodes[index.Value] as ISlaveNode)
                                         .ConfigureAwait(false);
 
             return euclidRange < _criticalRange;
@@ -88,11 +87,13 @@ namespace KohonenNetwork.Learning.Strategy
         private async Task _recalcWeights(KohonenNetwork network, double theta)
         {
             var output = await network.Output().ConfigureAwait(false);
-            GetWinner(network, output, theta).Synapses.AsParallel().ForAll(async synapse =>
+            var recalcTasks = GetWinner(network, output, theta).Synapses.Select(async synapse =>
             {
                 var nodeOutput = await synapse.MasterNode.Output().ConfigureAwait(false);
                 synapse.ChangeWeight(theta * (nodeOutput - synapse.Weight));
             });
+
+            await Task.WhenAll(recalcTasks).ConfigureAwait(false);
         }
 
         #endregion

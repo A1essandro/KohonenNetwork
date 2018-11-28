@@ -1,5 +1,6 @@
 using KohonenNetwork;
 using KohonenNetwork.Learning;
+using KohonenNetwork.Learning.Strategy;
 using Xunit;
 using System;
 using System.Collections.Generic;
@@ -39,16 +40,25 @@ namespace Test
             return inputs;
         }
 
-        [Fact]
-        public async Task Learning1()
+        private KNetwork _getNetwork()
         {
             var inputLayer = new InputLayer(() => new InputNode(), 3);
             var outputLayer = new Layer(() => new Neuron(), 5);
 
             new EachToEachSynapseGenerator<Synapse>().Generate(inputLayer, outputLayer);
 
+            return new KNetwork(inputLayer, outputLayer);
+        }
+
+        [Fact]
+        public async Task UnsupervisedLearningTest()
+        {
+            var inputLayer = new InputLayer(() => new InputNode(), 3);
+            var outputLayer = new Layer(() => new Neuron(), 5);
+            new EachToEachSynapseGenerator<Synapse>().Generate(inputLayer, outputLayer);
             var network = new KNetwork(inputLayer, outputLayer);
-            var strategy = new KohonenNetwork.Learning.Strategy.UnsupervisedLearning();
+
+            var strategy = new UnsupervisedLearning();
             var learning = new Learning<KNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
             {
                 EpochRepeats = 100,
@@ -65,6 +75,36 @@ namespace Test
             network.Input(_control[2]);
             var res2 = await network.GetOutputIndex();
 
+            Assert.NotEqual(res0, res1);
+            Assert.Equal(res1, res2);
+        }
+
+        [Fact]
+        public async Task UnsupervisedLearningVariableOutputTest()
+        {
+            const int OUTPUT_QTY = 5;
+            var inputLayer = new InputLayer(() => new InputNode(), 3);
+            var outputLayer = new Layer(); //without nodes
+            var network = new KNetwork(inputLayer, outputLayer);
+
+            var strategy = new UnsupervisedLearningVariableOutput(0.3, OUTPUT_QTY);
+            var learning = new Learning<KNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
+            {
+                EpochRepeats = 100,
+                ThetaFactorPerEpoch = i => 0.975
+            });
+
+            var inputs = _getInputs().Select(x => new SelfLearningSample(x));
+            await learning.Learn(inputs);
+
+            network.Input(_control[0]);
+            var res0 = await network.GetOutputIndex();
+            network.Input(_control[1]);
+            var res1 = await network.GetOutputIndex();
+            network.Input(_control[2]);
+            var res2 = await network.GetOutputIndex();
+
+            Assert.Equal(OUTPUT_QTY, network.OutputLayer.NodesQuantity);
             Assert.NotEqual(res0, res1);
             Assert.Equal(res1, res2);
         }
