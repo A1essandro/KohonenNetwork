@@ -16,13 +16,17 @@ namespace KohonenNetwork.Learning.Strategy
     public class UnsupervisedLearningVariableOutput : UnsupervisedLarningStrategyBase
     {
 
+        private static Func<IMasterNode, double, ISynapse> DefaultSynapseFactory = (n, w) => new Synapse(n, w);
+
         private readonly double _criticalRange;
         private readonly int _maxNeurons;
+        private readonly Func<IMasterNode, double, ISynapse> _synapseFactory;
 
-        public UnsupervisedLearningVariableOutput(double criticalRange, int maxOutputNeurons = int.MaxValue)
+        public UnsupervisedLearningVariableOutput(double criticalRange, int maxOutputNeurons = int.MaxValue, Func<IMasterNode, double, ISynapse> synapseFactory = null)
         {
             _criticalRange = criticalRange;
             _maxNeurons = maxOutputNeurons;
+            _synapseFactory = synapseFactory ?? DefaultSynapseFactory;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -45,14 +49,17 @@ namespace KohonenNetwork.Learning.Strategy
 
         #region private methods
 
-        private async Task _createNode(KohonenNetwork network)
+        private Task _createNode(KohonenNetwork network)
         {
             var newNode = new Neuron();
             ((ILayer<INotInputNode>)network.OutputLayer).AddNode(newNode);
-            foreach (var inputNode in network.InputLayer.Nodes.OfType<IMasterNode>())
-            {
-                newNode.AddSynapse(new Synapse(inputNode, await inputNode.Output()));
-            }
+
+            var tasks = network.InputLayer.Nodes.OfType<IMasterNode>().Select(async inputNode => {
+                var synapse = _synapseFactory(inputNode, await inputNode.Output());
+                newNode.AddSynapse(synapse);
+            });
+
+            return Task.WhenAll(tasks);
         }
 
         private async Task<bool> _needNewNeuron(KohonenNetwork network)

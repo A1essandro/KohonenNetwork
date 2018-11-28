@@ -61,7 +61,7 @@ namespace Test
             var strategy = new UnsupervisedLearning();
             var learning = new Learning<KNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
             {
-                EpochRepeats = 100,
+                EpochRepeats = 200,
                 ThetaFactorPerEpoch = x => 0.975
             });
 
@@ -87,10 +87,13 @@ namespace Test
             var outputLayer = new Layer(); //without nodes
             var network = new KNetwork(inputLayer, outputLayer);
 
-            var strategy = new UnsupervisedLearningVariableOutput(0.3, OUTPUT_QTY);
+            var strategy = new UnsupervisedLearningVariableOutput(
+                criticalRange: 0.15, 
+                maxOutputNeurons: OUTPUT_QTY, 
+                synapseFactory: (n, w) => new Synapse(n, w));
             var learning = new Learning<KNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
             {
-                EpochRepeats = 100,
+                EpochRepeats = 200,
                 ThetaFactorPerEpoch = i => 0.975
             });
 
