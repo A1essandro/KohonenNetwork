@@ -25,11 +25,13 @@ namespace KohonenNetwork.Learning.Strategy
         private async Task _recalcWeights(KohonenNetwork network, double theta)
         {
             var output = await network.Output().ConfigureAwait(false);
-            GetWinner(network, output, theta).Synapses.AsParallel().ForAll(async synapse =>
+            var recalcTasks = GetWinner(network, output, theta).Synapses.Select(async synapse =>
             {
                 var nodeOutput = await synapse.MasterNode.Output().ConfigureAwait(false);
                 synapse.ChangeWeight(theta * (nodeOutput - synapse.Weight));
             });
+
+            await Task.WhenAll(recalcTasks);
         }
 
         #endregion
