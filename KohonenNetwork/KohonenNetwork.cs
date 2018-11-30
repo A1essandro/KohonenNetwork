@@ -13,7 +13,7 @@ using NeuralNetworkConstructor.Structure.Synapses;
 
 namespace KohonenNetwork
 {
-    public class KohonenNetwork<TLayer> : TwoLayersNetwork<TLayer>
+    public class KohonenNetwork<TLayer> : TwoLayersNetwork<TLayer>, IKohonenNetwork
         where TLayer : IReadOnlyLayer<INotInputNode>
     {
 

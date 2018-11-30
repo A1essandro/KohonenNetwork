@@ -30,7 +30,7 @@ namespace KohonenNetwork.Learning.Strategy
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override async Task LearnSample(KohonenNetwork network, ISelfLearningSample sample, double theta)
+        public override async Task LearnSample(IKohonenNetwork network, ISelfLearningSample sample, double theta)
         {
             Contract.Requires(network.OutputLayer as ILayer<INotInputNode> != null,
                 $"OutputLayer of network must implements {nameof(ILayer<INotInputNode>)}");
@@ -49,7 +49,7 @@ namespace KohonenNetwork.Learning.Strategy
 
         #region private methods
 
-        private Task _createNode(KohonenNetwork network)
+        private Task _createNode(IKohonenNetwork network)
         {
             var newNode = new Neuron();
             ((ILayer<INotInputNode>)network.OutputLayer).AddNode(newNode);
@@ -62,7 +62,7 @@ namespace KohonenNetwork.Learning.Strategy
             return Task.WhenAll(tasks);
         }
 
-        private async Task<bool> _needNewNeuron(KohonenNetwork network)
+        private async Task<bool> _needNewNeuron(IKohonenNetwork network)
         {
             if (network.OutputLayer.NodesQuantity >= _maxNeurons)
             {
@@ -77,7 +77,7 @@ namespace KohonenNetwork.Learning.Strategy
             return true;
         }
 
-        private async Task<bool> _checkRangeAsync(KohonenNetwork network)
+        private async Task<bool> _checkRangeAsync(IKohonenNetwork network)
         {
             var index = await network.GetOutputIndex();
             if (!index.HasValue)
@@ -91,7 +91,7 @@ namespace KohonenNetwork.Learning.Strategy
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private async Task _recalcWeights(KohonenNetwork network, double theta)
+        private async Task _recalcWeights(IKohonenNetwork network, double theta)
         {
             var output = await network.Output().ConfigureAwait(false);
             var recalcTasks = GetWinner(network, output, theta).Synapses.Select(async synapse =>

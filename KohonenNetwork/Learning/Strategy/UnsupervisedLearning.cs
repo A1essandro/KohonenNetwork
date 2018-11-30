@@ -13,7 +13,7 @@ namespace KohonenNetwork.Learning.Strategy
     {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override Task LearnSample(KohonenNetwork network, ISelfLearningSample sample, double theta)
+        public override Task LearnSample(IKohonenNetwork network, ISelfLearningSample sample, double theta)
         {
             network.Input(sample.Input);
             return _recalcWeights(network, theta);
@@ -22,7 +22,7 @@ namespace KohonenNetwork.Learning.Strategy
         #region private methods
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private async Task _recalcWeights(KohonenNetwork network, double theta)
+        private async Task _recalcWeights(IKohonenNetwork network, double theta)
         {
             var output = await network.Output().ConfigureAwait(false);
             var recalcTasks = GetWinner(network, output, theta).Synapses.Select(async synapse =>

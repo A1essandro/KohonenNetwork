@@ -9,13 +9,13 @@ using NeuralNetworkConstructor.Structure.Nodes;
 
 namespace KohonenNetwork.Learning.Strategy
 {
-    public abstract class UnsupervisedLarningStrategyBase : ILearningStrategy<KohonenNetwork, ISelfLearningSample>
+    public abstract class UnsupervisedLarningStrategyBase : ILearningStrategy<IKohonenNetwork, ISelfLearningSample>
     {
 
-        public abstract Task LearnSample(KohonenNetwork network, ISelfLearningSample sample, double theta);
+        public abstract Task LearnSample(IKohonenNetwork network, ISelfLearningSample sample, double theta);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected ISlaveNode GetWinner(KohonenNetwork network, IEnumerable<double> output, double theta)
+        protected ISlaveNode GetWinner(IKohonenNetwork network, IEnumerable<double> output, double theta)
         {
             var winnerIndex = Array.IndexOf(output.ToArray(), output.Max());
             return network.OutputLayer.Nodes.ToArray()[winnerIndex] as ISlaveNode;
