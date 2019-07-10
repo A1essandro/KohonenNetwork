@@ -1,15 +1,13 @@
+using NeuralNetwork.Structure.Layers;
+using NeuralNetwork.Structure.Nodes;
+using NeuralNetwork.Structure.Summators;
+using NeuralNetwork.Structure.Synapses;
+using NeuralNetworkConstructor.Learning.Samples;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using NeuralNetworkConstructor.Learning.Samples;
-using NeuralNetworkConstructor.Learning.Strategies;
-using NeuralNetworkConstructor.Structure.Layers;
-using NeuralNetworkConstructor.Structure.Nodes;
-using NeuralNetworkConstructor.Structure.Summators;
-using NeuralNetworkConstructor.Structure.Synapses;
 
 namespace KohonenNetwork.Learning.Strategy
 {

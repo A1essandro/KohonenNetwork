@@ -1,15 +1,10 @@
-﻿using System;
+﻿using NeuralNetwork.Structure.Layers;
+using NeuralNetwork.Structure.Nodes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using KohonenNetwork.Learning;
-using NeuralNetworkConstructor.Constructor;
-using NeuralNetworkConstructor.Constructor.Generators;
-using NeuralNetworkConstructor.Structure.ActivationFunctions;
-using NeuralNetworkConstructor.Structure.Layers;
-using NeuralNetworkConstructor.Structure.Nodes;
-using NeuralNetworkConstructor.Structure.Synapses;
 
 namespace KohonenNetwork
 {

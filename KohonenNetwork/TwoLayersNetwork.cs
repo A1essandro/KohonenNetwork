@@ -1,7 +1,7 @@
+using NeuralNetwork.Structure.Layers;
+using NeuralNetwork.Structure.Networks;
+using NeuralNetwork.Structure.Nodes;
 using System.Collections.Generic;
-using NeuralNetworkConstructor.Networks;
-using NeuralNetworkConstructor.Structure.Layers;
-using NeuralNetworkConstructor.Structure.Nodes;
 
 namespace KohonenNetwork
 {

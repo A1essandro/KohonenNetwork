@@ -1,6 +1,6 @@
+using NeuralNetwork.Structure.Networks;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NeuralNetworkConstructor.Networks;
 
 namespace KohonenNetwork
 {

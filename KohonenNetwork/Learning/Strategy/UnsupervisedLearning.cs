@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
+using NeuralNetworkConstructor.Learning.Samples;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using NeuralNetworkConstructor.Learning.Samples;
-using NeuralNetworkConstructor.Learning.Strategies;
-using NeuralNetworkConstructor.Structure.Nodes;
 
 namespace KohonenNetwork.Learning.Strategy
 {

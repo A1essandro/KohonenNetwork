@@ -1,10 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
+    <PackageId>NeuralNetwork.Kohonen</PackageId>
+    <Version>$(Version)</Version>
+    <PackageVersion>$(PackageVersion)</PackageVersion>
+    <Authors>Alexander Yermakov</Authors>
+    <PackageTags>neural network, neurons, Kohonen neural network, Kohonen</PackageTags>
+    <PackageLicenseUrl>https://github.com/A1essandro/KohonenNetwork/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/A1essandro/KohonenNetwork</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/A1essandro/KohonenNetwork.git</RepositoryUrl>
+    <RootNamespace>NeuralNetwork.Kohonen</RootNamespace>
   </PropertyGroup>
+  
   <ItemGroup>
+    <PackageReference Include="NeuralNetwork.Structure" Version="0.1.2" />
+    <PackageReference Include="NeuralNetworkConstructor" Version="0.3.113-alpha" />
     <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
-    <PackageReference Include="NeuralNetworkConstructor" Version="0.3.107-alpha"/>
-    <PackageReference Condition="'$(TargetFramework)'=='netstandard1.3'" Include="System.Linq.Parallel" Version="4.*"/>
+    <PackageReference Condition="'$(TargetFramework)'=='netstandard1.3'" Include="System.Linq.Parallel" Version="4.*" />
   </ItemGroup>
 </Project>
