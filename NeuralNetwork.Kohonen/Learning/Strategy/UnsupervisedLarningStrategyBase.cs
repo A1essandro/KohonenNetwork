@@ -1,6 +1,6 @@
+using NeuralNetwork.Learning.Samples;
+using NeuralNetwork.Learning.Strategies;
 using NeuralNetwork.Structure.Nodes;
-using NeuralNetworkConstructor.Learning.Samples;
-using NeuralNetworkConstructor.Learning.Strategies;
 using System;
 using System.Collections.Generic;
 using System.Linq;

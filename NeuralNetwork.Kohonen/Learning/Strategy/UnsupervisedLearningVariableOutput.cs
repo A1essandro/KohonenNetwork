@@ -1,8 +1,8 @@
+using NeuralNetwork.Learning.Samples;
 using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
 using NeuralNetwork.Structure.Summators;
 using NeuralNetwork.Structure.Synapses;
-using NeuralNetworkConstructor.Learning.Samples;
 using System;
 using System.Diagnostics.Contracts;
 using System.Linq;

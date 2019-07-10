@@ -1,5 +1,5 @@
+using NeuralNetwork.Learning.Samples;
 using System.Collections.Generic;
-using NeuralNetworkConstructor.Learning.Samples;
 
 namespace NeuralNetwork.Kohonen.Learning
 {

@@ -1,4 +1,4 @@
-using NeuralNetworkConstructor.Learning.Samples;
+using NeuralNetwork.Learning.Samples;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;

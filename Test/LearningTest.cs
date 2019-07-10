@@ -1,12 +1,12 @@
 using NeuralNetwork.Kohonen;
 using NeuralNetwork.Kohonen.Learning;
 using NeuralNetwork.Kohonen.Learning.Strategy;
+using NeuralNetwork.Learning;
+using NeuralNetwork.Learning.Samples;
 using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
 using NeuralNetwork.Structure.Synapses;
 using NeuralNetworkConstructor.Constructor.Generators;
-using NeuralNetworkConstructor.Learning;
-using NeuralNetworkConstructor.Learning.Samples;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
