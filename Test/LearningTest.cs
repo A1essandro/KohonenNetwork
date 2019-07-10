@@ -1,5 +1,6 @@
-using KohonenNetwork.Learning;
-using KohonenNetwork.Learning.Strategy;
+using NeuralNetwork.Kohonen;
+using NeuralNetwork.Kohonen.Learning;
+using NeuralNetwork.Kohonen.Learning.Strategy;
 using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
 using NeuralNetwork.Structure.Synapses;
@@ -10,14 +11,13 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using KNetwork = KohonenNetwork.KohonenNetwork;
 
 namespace Test
 {
     public class LearningTest
     {
 
-        private double[][] _control = new double[][]
+        private readonly double[][] _control = new double[][]
             {
                 new double[] {0.99, 0.49, 0.01},
                 new double[] {0.03, 0.47, 0.99},
@@ -37,14 +37,14 @@ namespace Test
             return inputs;
         }
 
-        private KNetwork _getNetwork()
+        private KohonenNetwork _getNetwork()
         {
             var inputLayer = new InputLayer(() => new InputNode(), 3);
             var outputLayer = new Layer(() => new Neuron(), 5);
 
             new EachToEachSynapseGenerator<Synapse>().Generate(inputLayer, outputLayer);
 
-            return new KNetwork(inputLayer, outputLayer);
+            return new KohonenNetwork(inputLayer, outputLayer);
         }
 
         [Fact]
@@ -53,10 +53,10 @@ namespace Test
             var inputLayer = new InputLayer(() => new InputNode(), 3);
             var outputLayer = new Layer(() => new Neuron(), 5);
             new EachToEachSynapseGenerator<Synapse>().Generate(inputLayer, outputLayer);
-            var network = new KNetwork(inputLayer, outputLayer);
+            var network = new KohonenNetwork(inputLayer, outputLayer);
 
             var strategy = new UnsupervisedLearning();
-            var learning = new Learning<KNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
+            var learning = new Learning<KohonenNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
             {
                 EpochRepeats = 200,
                 ThetaFactorPerEpoch = x => 0.975
@@ -82,13 +82,13 @@ namespace Test
             const int OUTPUT_QTY = 5;
             var inputLayer = new InputLayer(() => new InputNode(), 3);
             var outputLayer = new Layer(); //without nodes
-            var network = new KNetwork(inputLayer, outputLayer);
+            var network = new KohonenNetwork(inputLayer, outputLayer);
 
             var strategy = new UnsupervisedLearningVariableOutput(
                 criticalRange: 0.15, 
                 maxOutputNeurons: OUTPUT_QTY, 
                 synapseFactory: (n, w) => new Synapse(n, w));
-            var learning = new Learning<KNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
+            var learning = new Learning<KohonenNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
             {
                 EpochRepeats = 200,
                 ThetaFactorPerEpoch = i => 0.975

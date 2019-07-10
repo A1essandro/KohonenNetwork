@@ -1,4 +1,4 @@
-using KohonenNetwork;
+using NeuralNetwork.Kohonen;
 using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
 using System;
@@ -15,7 +15,7 @@ namespace Test
         {
             var inputLayer = new InputLayer(() => new InputNode(), 5);
             var outputLayer = new Layer(() => new Neuron(), 2);
-            var network = new KohonenNetwork.KohonenNetwork(inputLayer, outputLayer);
+            var network = new NeuralNetwork.Kohonen.KohonenNetwork(inputLayer, outputLayer);
 
             Assert.Equal(1, network.Layers.Count());
             Assert.Throws<NotSupportedException>(() => network.Layers.Add(new Layer()));
@@ -39,7 +39,7 @@ namespace Test
         {
             var inputLayer = new InputLayer(() => new InputNode(), 5);
             var outputLayer = new Layer(() => new Neuron(), 2);
-            var network = new KohonenNetwork.KohonenNetwork(inputLayer, outputLayer);
+            var network = new NeuralNetwork.Kohonen.KohonenNetwork(inputLayer, outputLayer);
 
             Assert.Equal(5, network.InputLayer.Nodes.Count());
             Assert.Equal(2, network.OutputLayer.Nodes.Count());

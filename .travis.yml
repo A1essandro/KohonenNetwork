@@ -10,7 +10,7 @@ env:
         - DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 script:
-    - dotnet build KohonenNetwork.sln -c Release
+    - dotnet build NeuralNetwork.Kohonen.sln -c Release
     - dotnet test -c Release --no-build Test/Test.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
 after_script:

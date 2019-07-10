@@ -2,7 +2,7 @@ using NeuralNetwork.Structure.Networks;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace KohonenNetwork
+namespace NeuralNetwork.Kohonen
 {
     public interface IKohonenNetwork : INetwork
     {

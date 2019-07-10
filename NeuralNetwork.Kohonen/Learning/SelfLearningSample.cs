@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NeuralNetworkConstructor.Learning.Samples;
 
-namespace KohonenNetwork.Learning
+namespace NeuralNetwork.Kohonen.Learning
 {
     public class SelfLearningSample : ISelfLearningSample
     {

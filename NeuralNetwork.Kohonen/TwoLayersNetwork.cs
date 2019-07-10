@@ -3,7 +3,7 @@ using NeuralNetwork.Structure.Networks;
 using NeuralNetwork.Structure.Nodes;
 using System.Collections.Generic;
 
-namespace KohonenNetwork
+namespace NeuralNetwork.Kohonen
 {
     public abstract class TwoLayersNetwork<TLayer> : Network
         where TLayer : IReadOnlyLayer<INotInputNode>

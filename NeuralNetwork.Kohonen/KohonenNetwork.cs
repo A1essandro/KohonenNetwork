@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace KohonenNetwork
+namespace NeuralNetwork.Kohonen
 {
     public class KohonenNetwork<TLayer> : TwoLayersNetwork<TLayer>, IKohonenNetwork
         where TLayer : IReadOnlyLayer<INotInputNode>

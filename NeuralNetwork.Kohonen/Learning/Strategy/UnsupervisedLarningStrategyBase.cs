@@ -7,7 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace KohonenNetwork.Learning.Strategy
+namespace NeuralNetwork.Kohonen.Learning.Strategy
 {
     public abstract class UnsupervisedLarningStrategyBase : ILearningStrategy<IKohonenNetwork, ISelfLearningSample>
     {

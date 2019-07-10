@@ -12,6 +12,6 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KohonenNetwork\KohonenNetwork.csproj" />
+    <ProjectReference Include="..\NeuralNetwork.Kohonen\NeuralNetwork.Kohonen.csproj" />
   </ItemGroup>
 </Project>
