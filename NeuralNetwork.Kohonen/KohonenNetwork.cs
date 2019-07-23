@@ -44,7 +44,7 @@ namespace NeuralNetwork.Kohonen
         private double[] _prepareResult(IEnumerable<double> raw)
         {
             var winnerIndex = _getWinnerIndex(raw);
-            var result = new double[_outputLayer.Nodes.Count()];
+            var result = new double[OutputLayer.Nodes.Count()];
             if (winnerIndex.HasValue)
             {
                 result[winnerIndex.Value] = 1;

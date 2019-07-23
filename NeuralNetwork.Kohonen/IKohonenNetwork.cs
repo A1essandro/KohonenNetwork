@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace NeuralNetwork.Kohonen
 {
-    public interface IKohonenNetwork : INetwork
+    public interface IKohonenNetwork : ISimpleNetwork
     {
 
         Task<IEnumerable<double>> RawOutput();

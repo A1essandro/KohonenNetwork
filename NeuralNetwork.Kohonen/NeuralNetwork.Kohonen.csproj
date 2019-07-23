@@ -15,10 +15,10 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="NeuralNetwork.Learning" Version="0.1.1" />
-    <PackageReference Include="NeuralNetwork.Structure" Version="0.1.2" />
+    <PackageReference Include="NeuralNetwork.Learning" Version="0.2.4-alpha" />
+    <PackageReference Include="NeuralNetwork.Structure" Version="0.2.22-alpha" />
     <PackageReference Include="NeuralNetworkConstructor" Version="0.3.114-alpha" />
     <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
-    <PackageReference Condition="'$(TargetFramework)'=='netstandard1.3'" Include="System.Linq.Parallel" Version="4.*" />
+    <PackageReference Condition="'$(TargetFramework)'=='netstandard1.3'" Include="System.Linq.Parallel" Version="4.3.0" />
   </ItemGroup>
 </Project>

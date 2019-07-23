@@ -4,9 +4,9 @@ using NeuralNetwork.Kohonen.Learning.Strategy;
 using NeuralNetwork.Learning;
 using NeuralNetwork.Learning.Samples;
 using NeuralNetwork.Structure.Layers;
+using NeuralNetwork.Structure.Networks;
 using NeuralNetwork.Structure.Nodes;
 using NeuralNetwork.Structure.Synapses;
-using NeuralNetworkConstructor.Constructor.Generators;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,9 +42,10 @@ namespace Test
             var inputLayer = new InputLayer(() => new InputNode(), 3);
             var outputLayer = new Layer(() => new Neuron(), 5);
 
-            new EachToEachSynapseGenerator<Synapse>().Generate(inputLayer, outputLayer);
+            var network = new KohonenNetwork(inputLayer, outputLayer);
+            LinkEachToEachNodes(network, inputLayer, outputLayer);
 
-            return new KohonenNetwork(inputLayer, outputLayer);
+            return network;
         }
 
         [Fact]
@@ -52,8 +53,9 @@ namespace Test
         {
             var inputLayer = new InputLayer(() => new InputNode(), 3);
             var outputLayer = new Layer(() => new Neuron(), 5);
-            new EachToEachSynapseGenerator<Synapse>().Generate(inputLayer, outputLayer);
+
             var network = new KohonenNetwork(inputLayer, outputLayer);
+            LinkEachToEachNodes(network, inputLayer, outputLayer);
 
             var strategy = new UnsupervisedLearning();
             var learning = new Learning<KohonenNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
@@ -65,11 +67,11 @@ namespace Test
             var inputs = _getInputs().Select(x => new SelfLearningSample(x));
             await learning.Learn(inputs);
 
-            network.Input(_control[0]);
+            await network.Input(_control[0]);
             var res0 = await network.GetOutputIndex();
-            network.Input(_control[1]);
+            await network.Input(_control[1]);
             var res1 = await network.GetOutputIndex();
-            network.Input(_control[2]);
+            await network.Input(_control[2]);
             var res2 = await network.GetOutputIndex();
 
             Assert.NotEqual(res0, res1);
@@ -85,9 +87,10 @@ namespace Test
             var network = new KohonenNetwork(inputLayer, outputLayer);
 
             var strategy = new UnsupervisedLearningVariableOutput(
-                criticalRange: 0.15, 
-                maxOutputNeurons: OUTPUT_QTY, 
-                synapseFactory: (n, w) => new Synapse(n, w));
+                criticalRange: 0.15,
+                maxOutputNeurons: OUTPUT_QTY,
+                synapseFactory: (n1, n2, w) => new Synapse(n1, n2, w));
+
             var learning = new Learning<KohonenNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
             {
                 EpochRepeats = 200,
@@ -97,16 +100,31 @@ namespace Test
             var inputs = _getInputs().Select(x => new SelfLearningSample(x));
             await learning.Learn(inputs);
 
-            network.Input(_control[0]);
+            await network.Input(_control[0]);
             var res0 = await network.GetOutputIndex();
-            network.Input(_control[1]);
+            await network.Input(_control[1]);
             var res1 = await network.GetOutputIndex();
-            network.Input(_control[2]);
+            await network.Input(_control[2]);
             var res2 = await network.GetOutputIndex();
 
             Assert.Equal(OUTPUT_QTY, network.OutputLayer.NodesQuantity);
             Assert.NotEqual(res0, res1);
             Assert.Equal(res1, res2);
+        }
+
+        private void LinkEachToEachNodes(ISimpleNetwork network, ILayer<IMasterNode> layer1, ILayer<INotInputNode> layer2)
+        {
+            var rand = new Random();
+            foreach (var node1 in layer1.Nodes)
+            {
+                foreach (var node2 in layer2.Nodes)
+                {
+                    var weight = 2 * (rand.NextDouble() - 0.5);
+                    var synapse = new Synapse(node1, node2 as ISlaveNode, weight);
+
+                    network.AddSynapse(synapse);
+                }
+            }
         }
 
     }

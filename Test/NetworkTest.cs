@@ -1,7 +1,6 @@
 using NeuralNetwork.Kohonen;
 using NeuralNetwork.Structure.Layers;
 using NeuralNetwork.Structure.Nodes;
-using System;
 using System.Linq;
 using Xunit;
 
@@ -15,23 +14,9 @@ namespace Test
         {
             var inputLayer = new InputLayer(() => new InputNode(), 5);
             var outputLayer = new Layer(() => new Neuron(), 2);
-            var network = new NeuralNetwork.Kohonen.KohonenNetwork(inputLayer, outputLayer);
+            var network = new KohonenNetwork(inputLayer, outputLayer);
 
-            Assert.Equal(1, network.Layers.Count());
-            Assert.Throws<NotSupportedException>(() => network.Layers.Add(new Layer()));
-            Assert.Equal(1, network.Layers.Count());
-            Assert.True(network.Layers != network.Layers);
-        }
-
-        [Fact]
-        public void ProjectionTest()
-        {
-            var inputLayer = new InputLayer(() => new InputNode(), 5);
-            var outputLayer = new Layer2D<INotInputNode>(() => new Neuron(), 6, 3, 2);
-            var network = new KohonenNetwork<Layer2D<INotInputNode>>(inputLayer, outputLayer);
-
-            Assert.Equal(3, network.OutputProjection.Projection.GetLength(0));
-            Assert.Equal(2, network.OutputProjection.Projection.GetLength(1));
+            Assert.Equal(2, network.Layers.Count());
         }
 
         [Fact]
