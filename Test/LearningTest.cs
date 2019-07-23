@@ -93,8 +93,8 @@ namespace Test
 
             var learning = new Learning<KohonenNetwork, ISelfLearningSample>(network, strategy, new LearningSettings
             {
-                EpochRepeats = 200,
-                ThetaFactorPerEpoch = i => 0.975
+                EpochRepeats = 300,
+                ThetaFactorPerEpoch = i => 0.995
             });
 
             var inputs = _getInputs().Select(x => new SelfLearningSample(x));

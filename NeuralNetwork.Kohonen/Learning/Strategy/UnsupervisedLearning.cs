@@ -10,6 +10,7 @@ namespace NeuralNetwork.Kohonen.Learning.Strategy
         public override Task LearnSample(IKohonenNetwork network, ISelfLearningSample sample, double theta)
         {
             network.Input(sample.Input);
+
             return _recalcWeights(network, theta);
         }
 
@@ -21,11 +22,11 @@ namespace NeuralNetwork.Kohonen.Learning.Strategy
             var winner = GetWinner(network, output, theta);
             var synapses = network.Synapses.Where(s => s.SlaveNode == winner);
 
-            Parallel.ForEach(synapses, synapse =>
+            foreach (var synapse in synapses)
             {
                 var nodeOutput = synapse.MasterNode.LastCalculatedValue;
                 synapse.ChangeWeight(theta * (nodeOutput - synapse.Weight));
-            });
+            }
         }
 
         #endregion

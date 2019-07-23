@@ -10,7 +10,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="NeuralNetwork.Learning" Version="0.2.4-alpha" />
-    <PackageReference Include="NeuralNetwork.Structure" Version="0.2.22-alpha" />
+    <PackageReference Include="NeuralNetwork.Structure" Version="0.2.24-alpha" />
     <PackageReference Include="NeuralNetworkConstructor" Version="0.3.114-alpha" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">

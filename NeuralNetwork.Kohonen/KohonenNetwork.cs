@@ -1,4 +1,5 @@
 ﻿using NeuralNetwork.Structure.Layers;
+using NeuralNetwork.Structure.Networks;
 using NeuralNetwork.Structure.Nodes;
 using System;
 using System.Collections.Generic;
@@ -8,34 +9,31 @@ using System.Threading.Tasks;
 
 namespace NeuralNetwork.Kohonen
 {
-    public class KohonenNetwork<TLayer> : TwoLayersNetwork<TLayer>, IKohonenNetwork
-        where TLayer : IReadOnlyLayer<INotInputNode>
+    public class KohonenNetwork : SimpleNetwork, IKohonenNetwork
     {
 
-        public KohonenNetwork(IReadOnlyLayer<IMasterNode> inputLayer, TLayer outputLayer)
-            : base(inputLayer, outputLayer)
+        public KohonenNetwork(IReadOnlyLayer<IMasterNode> inputLayer, IReadOnlyLayer<INotInputNode> outputLayer)
         {
+            InputLayer = inputLayer;
+            OutputLayer = outputLayer;
         }
 
         /// <summary>
         /// Get prepeared result (values {0, 1})
         /// </summary>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override async Task<IEnumerable<double>> Output() => _prepareResult(await RawOutput().ConfigureAwait(false));
 
         /// <summary>
         /// Get unprepared result
         /// </summary>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Task<IEnumerable<double>> RawOutput() => base.Output();
 
         /// <summary>
         /// Get index of neuron with maximum result output
         /// </summary>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public async Task<int?> GetOutputIndex() => _getWinnerIndex(await Output().ConfigureAwait(false));
 
         #region Private methods
@@ -62,16 +60,6 @@ namespace NeuralNetwork.Kohonen
         }
 
         #endregion
-
-    }
-
-    public class KohonenNetwork : KohonenNetwork<IReadOnlyLayer<INotInputNode>>
-    {
-
-        public KohonenNetwork(IReadOnlyLayer<IMasterNode> inputLayer, IReadOnlyLayer<INotInputNode> outputLayer)
-            : base(inputLayer, outputLayer)
-        {
-        }
 
     }
 
